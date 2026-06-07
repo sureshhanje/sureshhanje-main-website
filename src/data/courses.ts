@@ -7,6 +7,7 @@ export const courses: Course[] = [
     duration: '10 months', level: 'Beginner',
     features: ['Interactive lessons', 'Story-based learning', 'Worksheets', 'Monthly assessments'],
     curriculumKeys: [], outcomesKeys: [], icon: 'BookOpen', popular: true,
+    fees: '₹250/hour',
   },
   {
     id: 'school-6-8', slug: 'kannada-class-6-8', category: 'school-6-8', categoryLabel: 'School (6-8)',
@@ -14,6 +15,7 @@ export const courses: Course[] = [
     duration: '10 months', level: 'Intermediate',
     features: ['Grammar mastery', 'Essay writing', 'Poetry analysis', 'Regular tests'],
     curriculumKeys: [], outcomesKeys: [], icon: 'GraduationCap',
+    fees: '₹300/hour',
   },
   {
     id: 'school-9-10', slug: 'kannada-class-9-10', category: 'school-9-10', categoryLabel: 'School (9-10)',
@@ -21,6 +23,7 @@ export const courses: Course[] = [
     duration: '10 months', level: 'Intermediate',
     features: ['SSLC syllabus coverage', 'Model papers', 'Mock tests', 'Exam strategies'],
     curriculumKeys: [], outcomesKeys: [], icon: 'Award', popular: true,
+    fees: '₹350/hour',
   },
   {
     id: 'puc-1', slug: 'puc-1-kannada', category: 'puc-1', categoryLabel: 'PUC-1',
@@ -28,6 +31,7 @@ export const courses: Course[] = [
     duration: '10 months', level: 'Advanced',
     features: ['Textbook analysis', 'Grammar deep-dive', 'Non-detail texts', 'Exam prep'],
     curriculumKeys: [], outcomesKeys: [], icon: 'BookOpen',
+    fees: '₹400/hour',
   },
   {
     id: 'puc-2', slug: 'puc-2-kannada', category: 'puc-2', categoryLabel: 'PUC-2',
@@ -35,6 +39,7 @@ export const courses: Course[] = [
     duration: '10 months', level: 'Advanced',
     features: ['Complete syllabus', 'Board exam prep', 'Model papers', 'Time management'],
     curriculumKeys: [], outcomesKeys: [], icon: 'GraduationCap', popular: true,
+    fees: '₹400/hour',
   },
   {
     id: 'degree', slug: 'degree-kannada', category: 'degree', categoryLabel: 'Degree',
@@ -42,6 +47,7 @@ export const courses: Course[] = [
     duration: '12 months', level: 'Advanced',
     features: ['University syllabus', 'Literature analysis', 'Research methods', 'Academic writing'],
     curriculumKeys: [], outcomesKeys: [], icon: 'Award',
+    fees: '₹450/hour',
   },
   {
     id: 'spoken-basic', slug: 'spoken-kannada-basic', category: 'spoken', categoryLabel: 'Spoken',
@@ -49,6 +55,7 @@ export const courses: Course[] = [
     duration: '3 months', level: 'Beginner',
     features: ['Daily conversations', 'Practical scenarios', 'Audio practice', 'Cultural context'],
     curriculumKeys: [], outcomesKeys: [], icon: 'MessageCircle', popular: true,
+    fees: '₹300/hour',
   },
   {
     id: 'spoken-advanced', slug: 'spoken-kannada-advanced', category: 'spoken', categoryLabel: 'Spoken',
@@ -56,6 +63,7 @@ export const courses: Course[] = [
     duration: '3 months', level: 'Advanced',
     features: ['Complex sentences', 'Idioms & proverbs', 'Formal register', 'Debates'],
     curriculumKeys: [], outcomesKeys: [], icon: 'MessageCircle',
+    fees: '₹350/hour',
   },
   {
     id: 'non-kannadigas', slug: 'kannada-for-non-kannadigas', category: 'non-kannadigas', categoryLabel: 'Non-Kannadigas',
@@ -63,6 +71,7 @@ export const courses: Course[] = [
     duration: '4 months', level: 'Beginner',
     features: ['Script learning', '500+ words', 'Practical conversations', 'Cultural etiquette'],
     curriculumKeys: [], outcomesKeys: [], icon: 'Globe',
+    fees: '₹400/hour',
   },
   {
     id: 'competitive', slug: 'competitive-exam-kannada', category: 'competitive', categoryLabel: 'Competitive',
@@ -70,6 +79,7 @@ export const courses: Course[] = [
     duration: '6 months', level: 'Advanced',
     features: ['KAS/SDA/FDA prep', 'Previous papers', 'Grammar shortcuts', 'Mock tests'],
     curriculumKeys: [], outcomesKeys: [], icon: 'Target', popular: true,
+    fees: '₹500/hour',
   },
 ];
 

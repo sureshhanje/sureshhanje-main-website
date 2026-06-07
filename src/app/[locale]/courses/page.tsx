@@ -71,9 +71,14 @@ export default function CoursesPage() {
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">{t(course.descriptionKey.replace('courses.', ''))}</p>
                     </div>
                     <div className="mt-auto">
-                      <div className="flex items-center gap-4 text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-4 pt-2 border-t border-gray-100/60 dark:border-white/5">
-                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{course.duration}</span>
-                        <span className="flex items-center gap-1"><BarChart className="h-3 w-3" />{course.level}</span>
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pt-2 border-t border-gray-100/60 dark:border-white/5 text-[11px] text-gray-450 dark:text-gray-400 font-medium uppercase tracking-wide">
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
+                          <span className="flex items-center gap-1"><BarChart className="h-3.5 w-3.5" />{course.level}</span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-350 font-bold text-xs border border-amber-100/50 dark:border-amber-900/20 normal-case">
+                          {course.fees}
+                        </span>
                       </div>
                       <div className="flex flex-wrap gap-1.5 mb-5">
                         {course.features.map((f, i) => (

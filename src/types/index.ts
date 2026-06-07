@@ -12,6 +12,7 @@ export interface Course {
   outcomesKeys: string[];
   icon: string;
   popular?: boolean;
+  fees: string;
 }
 
 export interface Review {

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
-import { ArrowRight, BookOpen, GraduationCap, Users, Clock, Star, CheckCircle, Monitor, Sparkles, Play } from 'lucide-react';
+import { ArrowRight, BookOpen, GraduationCap, Users, Clock, Star, CheckCircle, Monitor, Sparkles, Play, BarChart } from 'lucide-react';
 import { GlassCard } from '@/components/shared/glass-card';
 import { AnimatedCounter } from '@/components/shared/animated-counter';
 import { FadeIn } from '@/components/animations/fade-in';
@@ -186,9 +186,14 @@ export default function HomePage() {
                       <h3 className="text-base font-semibold mb-2 text-gray-900 dark:text-white">{t(course.titleKey)}</h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">{t(course.descriptionKey)}</p>
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-gray-400 font-medium uppercase tracking-wide mt-auto pt-2 border-t border-gray-100/60 dark:border-white/5">
-                      <span>{course.duration}</span>
-                      <span>{course.level}</span>
+                    <div className="flex flex-wrap items-center justify-between gap-2 mt-auto pt-2 border-t border-gray-100/60 dark:border-white/5 text-[11px] text-gray-450 dark:text-gray-400 font-medium uppercase tracking-wide">
+                      <div className="flex items-center gap-3">
+                        <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
+                        <span className="flex items-center gap-1"><BarChart className="h-3.5 w-3.5" />{course.level}</span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-350 font-bold text-xs border border-amber-100/50 dark:border-amber-900/20 normal-case">
+                        {course.fees}
+                      </span>
                     </div>
                   </GlassCard>
                 </div>
