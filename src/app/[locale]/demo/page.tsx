@@ -7,14 +7,13 @@ import { SectionHeader } from '@/components/shared/section-header';
 import { FadeIn } from '@/components/animations/fade-in';
 
 export default function DemoPage() {
-  const t = useTranslations('demo'); // Make sure to add 'demo' keys to your kn.json and en.json
+  const t = useTranslations('demo');
 
   return (
     <>
       <section className="relative pt-28 pb-16 kannada-pattern overflow-hidden">
         <GradientOrbs />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Using the same SectionHeader as your reviews page */}
           <SectionHeader 
             titleKey="title" 
             subtitleKey="subtitle" 
@@ -27,11 +26,11 @@ export default function DemoPage() {
         <div className="max-w-4xl mx-auto px-4">
           <FadeIn>
             <GlassCard className="p-0 overflow-hidden border-none shadow-2xl">
-              <div className="relative w-full" style={{ height: "850px" }}>
-                {/* 
-                  Note: I've converted your link to the embed format. 
-                  Google Forms need the /viewform?embedded=true suffix to look right inside a site.
-                */}
+              {/* 
+                Increased height for mobile (min-h-[900px]) and set a taller desktop height 
+                to ensure the "Submit" button is visible and the form is scrollable.
+              */}
+              <div className="relative w-full h-[800px] md:h-[900px] min-h-[700px]">
                 <iframe
                   src="https://docs.google.com/forms/d/e/1FAIpQLSfOjkiEANDqRvsYYco0kOF7W47cFwEX3HeY-es-MrLZtUKyYQ/viewform?embedded=true"
                   width="100%"
@@ -40,8 +39,9 @@ export default function DemoPage() {
                   marginHeight={0}
                   marginWidth={0}
                   className="bg-white"
+                  title="Google Form"
                 >
-                  Loading…
+                  Loading...
                 </iframe>
               </div>
             </GlassCard>
