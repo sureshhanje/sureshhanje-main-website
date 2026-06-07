@@ -360,6 +360,16 @@
     "select_game": "Select Game Mode",
     "play_now": "Play Now",
     "correct": "Correct!",
-    "incorrect": "Incorrect!"
+    "incorrect": "Incorrect!",
+    "game3_title": "Word Builder",
+    "game3_desc": "Assemble Kannada words from scrambled syllables. Learn spelling & structure!",
+    "victory_word_builder": "Master Builder!",
+    "victory_word_builder_desc": "Incredible! You correctly built all words in this level!",
+    "toggle_script_mode": "Script Mode",
+    "toggle_phonetic_mode": "Phonetic Mode",
+    "check_answer": "Check Answer",
+    "clear": "Reset Slots",
+    "word_builder_title": "Word Builder",
+    "word_builder_desc": "Reorder the blocks to spell the Kannada word correctly."
   }
 }

@@ -17,6 +17,8 @@ interface VocabItem {
   english: string;
   kannada: string;
   phonetic: string;
+  syllables?: string[];
+  phoneticSyllables?: string[];
 }
 
 interface Level {
@@ -39,6 +41,11 @@ interface Question {
   options: string[];
 }
 
+interface ScrambledBlock {
+  id: string;
+  text: string;
+}
+
 // Vocab Levels configuration
 const LEVELS: Level[] = [
   {
@@ -46,10 +53,38 @@ const LEVELS: Level[] = [
     titleKey: 'level1',
     colorClass: 'from-blue-500/20 to-indigo-500/20 border-blue-500/30 text-blue-600 dark:text-blue-400',
     vocab: [
-      { id: '1-1', english: 'Hello / Greetings', kannada: 'ನಮಸ್ಕಾರ', phonetic: 'Namaskāra' },
-      { id: '1-2', english: 'Thank you', kannada: 'ಧನ್ಯವಾದ', phonetic: 'Dhanyavāda' },
-      { id: '1-3', english: 'Welcome', kannada: 'ಸುಸ್ವಾಗತ', phonetic: 'Suswāgatha' },
-      { id: '1-4', english: 'Goodbye', kannada: 'ಹೋಗಿ ಬರುತ್ತೇನೆ', phonetic: 'Hōgi baruttēne' },
+      { 
+        id: '1-1', 
+        english: 'Hello / Greetings', 
+        kannada: 'ನಮಸ್ಕಾರ', 
+        phonetic: 'Namaskāra',
+        syllables: ['ನ', 'ಮ', 'ಸ್ಕಾ', 'ರ'],
+        phoneticSyllables: ['Na', 'mas', 'kā', 'ra']
+      },
+      { 
+        id: '1-2', 
+        english: 'Thank you', 
+        kannada: 'ಧನ್ಯವಾದ', 
+        phonetic: 'Dhanyavāda',
+        syllables: ['ಧ', 'ನ್ಯ', 'ವಾ', 'ದ'],
+        phoneticSyllables: ['Dhan', 'ya', 'vā', 'da']
+      },
+      { 
+        id: '1-3', 
+        english: 'Welcome', 
+        kannada: 'ಸುಸ್ವಾಗತ', 
+        phonetic: 'Suswāgatha',
+        syllables: ['ಸು', 'ಸ್ವಾ', 'ಗ', 'ತ'],
+        phoneticSyllables: ['Sus', 'wā', 'ga', 'tha']
+      },
+      { 
+        id: '1-4', 
+        english: 'Goodbye', 
+        kannada: 'ಹೋಗಿ ಬರುತ್ತೇನೆ', 
+        phonetic: 'Hōgi baruttēne',
+        syllables: ['ಹೋ', 'ಗಿ', 'ಬ', 'ರು', 'ತ್ತೇ', 'ನೆ'],
+        phoneticSyllables: ['Hō', 'gi', 'ba', 'rut', 'tē', 'ne']
+      },
     ]
   },
   {
@@ -57,10 +92,38 @@ const LEVELS: Level[] = [
     titleKey: 'level2',
     colorClass: 'from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-600 dark:text-amber-400',
     vocab: [
-      { id: '2-1', english: 'Water', kannada: 'ನೀರು', phonetic: 'Neeru' },
-      { id: '2-2', english: 'Food', kannada: 'ಊಟ', phonetic: 'Oota' },
-      { id: '2-3', english: 'House', kannada: 'ಮನೆ', phonetic: 'Mane' },
-      { id: '2-4', english: 'Road', kannada: 'ರಸ್ತೆ', phonetic: 'Raste' },
+      { 
+        id: '2-1', 
+        english: 'Water', 
+        kannada: 'ನೀರು', 
+        phonetic: 'Neeru',
+        syllables: ['ನೀ', 'ರು'],
+        phoneticSyllables: ['Nee', 'ru']
+      },
+      { 
+        id: '2-2', 
+        english: 'Food', 
+        kannada: 'ಊಟ', 
+        phonetic: 'Oota',
+        syllables: ['ಊ', 'ಟ'],
+        phoneticSyllables: ['Oo', 'ta']
+      },
+      { 
+        id: '2-3', 
+        english: 'House', 
+        kannada: 'ಮನೆ', 
+        phonetic: 'Mane',
+        syllables: ['ಮ', 'ನೆ'],
+        phoneticSyllables: ['Ma', 'ne']
+      },
+      { 
+        id: '2-4', 
+        english: 'Road', 
+        kannada: 'ರಸ್ತೆ', 
+        phonetic: 'Raste',
+        syllables: ['ರ', 'ಸ್ತೆ'],
+        phoneticSyllables: ['Ras', 'te']
+      },
     ]
   },
   {
@@ -68,10 +131,38 @@ const LEVELS: Level[] = [
     titleKey: 'level3',
     colorClass: 'from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-600 dark:text-emerald-400',
     vocab: [
-      { id: '3-1', english: 'One', kannada: 'ಒಂದು', phonetic: 'Ondu' },
-      { id: '3-2', english: 'Two', kannada: 'ಎರಡು', phonetic: 'Eradu' },
-      { id: '3-3', english: 'Three', kannada: 'ಮೂರು', phonetic: 'Mooru' },
-      { id: '3-4', english: 'Four', kannada: 'ನಾಲ್ಕು', phonetic: 'Nālku' },
+      { 
+        id: '3-1', 
+        english: 'One', 
+        kannada: 'ಒಂದು', 
+        phonetic: 'Ondu',
+        syllables: ['ಒಂ', 'ದು'],
+        phoneticSyllables: ['On', 'du']
+      },
+      { 
+        id: '3-2', 
+        english: 'Two', 
+        kannada: 'ಎರಡು', 
+        phonetic: 'Eradu',
+        syllables: ['ಎ', 'ರ', 'ಡು'],
+        phoneticSyllables: ['E', 'ra', 'du']
+      },
+      { 
+        id: '3-3', 
+        english: 'Three', 
+        kannada: 'ಮೂರು', 
+        phonetic: 'Mooru',
+        syllables: ['ಮೂ', 'ರು'],
+        phoneticSyllables: ['Moo', 'ru']
+      },
+      { 
+        id: '3-4', 
+        english: 'Four', 
+        kannada: 'ನಾಲ್ಕು', 
+        phonetic: 'Nālku',
+        syllables: ['ನಾಲ್', 'ಕು'],
+        phoneticSyllables: ['Nāl', 'ku']
+      },
     ]
   },
   {
@@ -79,10 +170,38 @@ const LEVELS: Level[] = [
     titleKey: 'level4',
     colorClass: 'from-pink-500/20 to-rose-500/20 border-pink-500/30 text-pink-600 dark:text-pink-400',
     vocab: [
-      { id: '4-1', english: 'Where is it?', kannada: 'ಎಲ್ಲಿದೆ?', phonetic: 'Ellide?' },
-      { id: '4-2', english: 'How much?', kannada: 'ಎಷ್ಟು?', phonetic: 'Eshtu?' },
-      { id: '4-3', english: 'What is it?', kannada: 'ಏನದು?', phonetic: 'Ēnadu?' },
-      { id: '4-4', english: 'Come', kannada: 'ಬನ್ನಿ', phonetic: 'Banni' },
+      { 
+        id: '4-1', 
+        english: 'Where is it?', 
+        kannada: 'ಎಲ್ಲಿದೆ?', 
+        phonetic: 'Ellide?',
+        syllables: ['ಎಲ್', 'ಲಿ', 'ದೆ'],
+        phoneticSyllables: ['El', 'li', 'de']
+      },
+      { 
+        id: '4-2', 
+        english: 'How much?', 
+        kannada: 'ಎಷ್ಟು?', 
+        phonetic: 'Eshtu?',
+        syllables: ['ಎಶ್', 'ಟು'],
+        phoneticSyllables: ['Esh', 'tu']
+      },
+      { 
+        id: '4-3', 
+        english: 'What is it?', 
+        kannada: 'ಏನದು?', 
+        phonetic: 'Ēnadu?',
+        syllables: ['ಏ', 'ನ', 'ದು'],
+        phoneticSyllables: ['Ē', 'na', 'du']
+      },
+      { 
+        id: '4-4', 
+        english: 'Come', 
+        kannada: 'ಬನ್ನಿ', 
+        phonetic: 'Banni',
+        syllables: ['ಬನ್', 'ನಿ'],
+        phoneticSyllables: ['Ban', 'ni']
+      },
     ]
   }
 ];
@@ -92,8 +211,8 @@ export default function GamesPage() {
   const tCommon = useTranslations('common');
   const locale = useLocale();
   
-  // Game Selector Mode: 'select' (game menu), 'vocab' (vocab match), 'sound' (sound quest)
-  const [gameMode, setGameMode] = useState<'select' | 'vocab' | 'sound'>('select');
+  // Game Selector Mode: 'select' (game menu), 'vocab' (vocab match), 'sound' (sound quest), 'wordbuilder' (word builder)
+  const [gameMode, setGameMode] = useState<'select' | 'vocab' | 'sound' | 'wordbuilder'>('select');
 
   // Game States (Shared)
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'complete'>('idle');
@@ -102,6 +221,7 @@ export default function GamesPage() {
   const [timeSpent, setTimeSpent] = useState(0);
   const [highScores, setHighScores] = useState<Record<number, number>>({}); // Vocab Match (best turns)
   const [sqHighScores, setSqHighScores] = useState<Record<number, number>>({}); // Sound Quest (best score)
+  const [wbHighScores, setWbHighScores] = useState<Record<number, number>>({}); // Word Builder (best score)
   
   // Settings (Shared)
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -125,6 +245,17 @@ export default function GamesPage() {
   const [sqSelectedOption, setSqSelectedOption] = useState<string | null>(null);
   const [sqAnswered, setSqAnswered] = useState(false);
 
+  // Word Builder specific states
+  const [wbCurrentIdx, setWbCurrentIdx] = useState(0);
+  const [wbMode, setWbMode] = useState<'script' | 'phonetic'>('script');
+  const [wbSelectedBlockIds, setWbSelectedBlockIds] = useState<string[]>([]);
+  const [wbScrambledPool, setWbScrambledPool] = useState<ScrambledBlock[]>([]);
+  const [wbLives, setWbLives] = useState(3);
+  const [wbStreak, setWbStreak] = useState(0);
+  const [wbScore, setWbScore] = useState(0);
+  const [wbAnswered, setWbAnswered] = useState(false);
+  const [wbIsCorrect, setWbIsCorrect] = useState(false);
+
   // Load High Scores & TTS voices on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -141,6 +272,15 @@ export default function GamesPage() {
       if (savedSq) {
         try {
           setSqHighScores(JSON.parse(savedSq));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      const savedWb = localStorage.getItem('kannada_games_wb_high_scores');
+      if (savedWb) {
+        try {
+          setWbHighScores(JSON.parse(savedWb));
         } catch (e) {
           console.error(e);
         }
@@ -590,6 +730,152 @@ export default function GamesPage() {
     }, 1600);
   };
 
+  // ==========================================
+  // GAME 3: WORD BUILDER LOGIC
+  // ==========================================
+  const initWordBuilder = (levelId: number) => {
+    unlockAudio();
+    const level = LEVELS.find(l => l.id === levelId);
+    if (!level) return;
+
+    setWbCurrentIdx(0);
+    setWbLives(3);
+    setWbStreak(0);
+    setWbScore(0);
+    setWbSelectedBlockIds([]);
+    setWbAnswered(false);
+    setWbIsCorrect(false);
+    setTimeSpent(0);
+    setGameState('playing');
+    setCurrentLevelId(levelId);
+
+    setupWordBuilderQuestion(level.vocab[0], wbMode);
+  };
+
+  const setupWordBuilderQuestion = (vocabItem: VocabItem, mode: 'script' | 'phonetic') => {
+    const syllableSource = mode === 'script' 
+      ? (vocabItem.syllables || []) 
+      : (vocabItem.phoneticSyllables || []);
+
+    // Create unique blocks
+    const blocks: ScrambledBlock[] = syllableSource.map((text, idx) => ({
+      id: `${vocabItem.id}_${idx}_${mode}`,
+      text
+    }));
+
+    // Shuffle blocks
+    const scrambled = [...blocks].sort(() => Math.random() - 0.5);
+
+    setWbScrambledPool(scrambled);
+    setWbSelectedBlockIds([]);
+    setWbAnswered(false);
+    setWbIsCorrect(false);
+
+    // Speak the word to guide them
+    setTimeout(() => {
+      speakKannadaWord(vocabItem.kannada);
+    }, 450);
+  };
+
+  const handleWbBlockClick = (blockId: string) => {
+    if (wbAnswered) return;
+    playSynthSound('click');
+    setWbSelectedBlockIds(prev => [...prev, blockId]);
+  };
+
+  const handleWbPlacedBlockClick = (blockId: string) => {
+    if (wbAnswered) return;
+    playSynthSound('click');
+    setWbSelectedBlockIds(prev => prev.filter(id => id !== blockId));
+  };
+
+  const checkWordBuilderAnswer = () => {
+    if (wbAnswered) return;
+
+    const level = LEVELS.find(l => l.id === currentLevelId);
+    if (!level) return;
+    const vocabItem = level.vocab[wbCurrentIdx];
+    const syllableSource = wbMode === 'script' 
+      ? (vocabItem.syllables || []) 
+      : (vocabItem.phoneticSyllables || []);
+
+    if (wbSelectedBlockIds.length !== syllableSource.length) return; // Must place all blocks first
+
+    setWbAnswered(true);
+
+    // Map selected IDs back to their index suffix
+    const selectedIndices = wbSelectedBlockIds.map(id => {
+      const parts = id.split('_');
+      return parseInt(parts[parts.length - 2], 10);
+    });
+
+    // Verify if it is in perfect ascending order [0, 1, 2, ..., length-1]
+    const isCorrect = selectedIndices.every((val, index) => val === index);
+
+    setWbIsCorrect(isCorrect);
+
+    if (isCorrect) {
+      playSynthSound('match');
+      const newWordScore = 10 + (wbStreak >= 2 ? 5 : 0);
+      setWbScore(prev => prev + newWordScore);
+      setWbStreak(prev => prev + 1);
+
+      // Speak word again on correct
+      speakKannadaWord(vocabItem.kannada);
+
+      // Go to next word after a delay
+      setTimeout(() => {
+        if (wbCurrentIdx === level.vocab.length - 1) {
+          // LEVEL COMPLETE / VICTORY!
+          setGameState('complete');
+          playSynthSound('victory');
+          setTimeout(startConfettiRain, 150);
+
+          setWbHighScores(prevScores => {
+            const currentBest = prevScores[currentLevelId];
+            const newScore = wbScore + newWordScore;
+            if (!currentBest || newScore > currentBest) {
+              const updated = { ...prevScores, [currentLevelId]: newScore };
+              localStorage.setItem('kannada_games_wb_high_scores', JSON.stringify(updated));
+              return updated;
+            }
+            return prevScores;
+          });
+        } else {
+          const nextIdx = wbCurrentIdx + 1;
+          setWbCurrentIdx(nextIdx);
+          setupWordBuilderQuestion(level.vocab[nextIdx], wbMode);
+        }
+      }, 1600);
+    } else {
+      playSynthSound('mismatch');
+      setWbLives(prev => prev - 1);
+      setWbStreak(0);
+
+      // Delay before resetting incorrect answer so they can see their mistake
+      setTimeout(() => {
+        if (wbLives - 1 === 0) {
+          // GAME OVER
+          setGameState('complete');
+          playSynthSound('mismatch');
+        } else {
+          // Reset only the selected blocks to let them try this word again!
+          setWbSelectedBlockIds([]);
+          setWbAnswered(false);
+          setWbIsCorrect(false);
+        }
+      }, 1600);
+    }
+  };
+
+  const handleWbModeToggle = (newMode: 'script' | 'phonetic') => {
+    setWbMode(newMode);
+    const level = LEVELS.find(l => l.id === currentLevelId);
+    if (level) {
+      setupWordBuilderQuestion(level.vocab[wbCurrentIdx], newMode);
+    }
+  };
+
   // Shared Helper calculations
   const calculateStars = (flips: number) => {
     if (flips <= 5) return 3;
@@ -648,7 +934,7 @@ export default function GamesPage() {
           
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400 bg-clip-text text-transparent flex items-center gap-1.5 font-kannada">
             <Sparkles className="h-5 w-5 text-primary-500 animate-pulse" />
-            {gameMode === 'sound' ? t('sound_quest_title') : (gameMode === 'vocab' ? t('game1_title') : t('title'))}
+            {gameMode === 'sound' ? t('sound_quest_title') : (gameMode === 'vocab' ? t('game1_title') : (gameMode === 'wordbuilder' ? t('game3_title') : t('title')))}
           </h1>
 
           <div className="flex items-center gap-2">
@@ -697,7 +983,7 @@ export default function GamesPage() {
                       {t('subtitle')}
                     </p>
 
-                    <div className="grid md:grid-cols-2 gap-6 text-left">
+                    <div className="grid md:grid-cols-3 gap-6 text-left">
                       {/* Game 1: Vocab Match */}
                       <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
                         <div>
@@ -705,7 +991,7 @@ export default function GamesPage() {
                             <BookOpen className="h-6 w-6" />
                           </div>
                           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('game1_title')}</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                          <p className="text-sm text-gray-505 dark:text-gray-400 leading-relaxed mb-6">
                             {t('game1_desc')}
                           </p>
                         </div>
@@ -729,7 +1015,7 @@ export default function GamesPage() {
                             <Volume1 className="h-6 w-6" />
                           </div>
                           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('sound_quest_title')}</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                          <p className="text-sm text-gray-555 dark:text-gray-400 leading-relaxed mb-6">
                             {t('sound_quest_desc')}
                           </p>
                         </div>
@@ -740,6 +1026,30 @@ export default function GamesPage() {
                             setGameState('idle');
                           }}
                           className="w-full py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
+                        >
+                          {t('play_now') || 'Play Now'}
+                          <Play className="h-4 w-4 fill-current" />
+                        </button>
+                      </GlassCard>
+
+                      {/* Game 3: Word Builder */}
+                      <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
+                        <div>
+                          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-6">
+                            <Sparkles className="h-6 w-6" />
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('game3_title')}</h3>
+                          <p className="text-sm text-gray-555 dark:text-gray-400 leading-relaxed mb-6">
+                            {t('game3_desc')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            unlockAudio();
+                            setGameMode('wordbuilder');
+                            setGameState('idle');
+                          }}
+                          className="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
                         >
                           {t('play_now') || 'Play Now'}
                           <Play className="h-4 w-4 fill-current" />
@@ -1246,6 +1556,390 @@ export default function GamesPage() {
                       <button
                         onClick={() => setGameState('idle')}
                         className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-pink-650 hover:bg-pink-700 text-white rounded-full font-bold shadow-md shadow-pink-600/20 hover:shadow-lg transition-all text-sm bg-pink-600"
+                      >
+                        Back to Levels
+                        <Trophy className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {/* ======================================= */}
+              {/* GAME MODE 3: WORD BUILDER BOARD         */}
+              {/* ======================================= */}
+              {gameMode === 'wordbuilder' && gameState === 'idle' && (
+                <motion.div
+                  key="wb-idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full text-center py-10"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                    <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center mx-auto mb-6 text-amber-600 dark:text-amber-400">
+                      <Sparkles className="h-7 w-7 animate-pulse" />
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('word_builder_title')}</h2>
+                    <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+                      {t('word_builder_desc')}
+                    </p>
+
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-555 uppercase tracking-wider mb-4">
+                      {t('select_level')}
+                    </h3>
+                    
+                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                      {LEVELS.map(level => {
+                        const best = wbHighScores[level.id];
+                        return (
+                          <button
+                            key={level.id}
+                            onClick={() => initWordBuilder(level.id)}
+                            className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] hover:border-amber-400 dark:hover:border-amber-900 hover:shadow-md transition-all text-left group"
+                          >
+                            <div>
+                              <div className="font-bold text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                {t(level.titleKey)}
+                              </div>
+                              <div className="text-xs text-gray-400 dark:text-gray-550 mt-0.5">
+                                {level.vocab.length} Words • Syllable Scramble
+                              </div>
+                            </div>
+                            {best ? (
+                              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 text-amber-700 dark:text-amber-400 font-bold text-xs">
+                                <Trophy className="h-3 w-3" />
+                                {best} pts
+                              </div>
+                            ) : (
+                              <div className="p-2 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+                                <Play className="h-4 w-4 fill-current" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {gameMode === 'wordbuilder' && gameState === 'playing' && (
+                <motion.div
+                  key="wb-playing"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full flex flex-col gap-6 max-w-2xl mx-auto"
+                >
+                  {/* Status Bar */}
+                  <div className="flex items-center justify-between text-sm px-2 font-semibold text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-[#16112a]/30 p-3 rounded-2xl border border-gray-200/50 dark:border-white/5 shadow-sm">
+                    <span className="text-gray-455 dark:text-gray-500">
+                      {t('question') || 'Question'} {wbCurrentIdx + 1}/{LEVELS[currentLevelId - 1].vocab.length}
+                    </span>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1.5" title={`${wbLives} Lives Remaining`}>
+                        {[...Array(3)].map((_, i) => (
+                          <Heart 
+                            key={i} 
+                            className={`h-5 w-5 ${
+                              i < wbLives 
+                                ? 'text-red-500 fill-red-500 filter drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]' 
+                                : 'text-gray-300 dark:text-gray-700'
+                            }`} 
+                          />
+                        ))}
+                      </div>
+
+                      {wbStreak >= 2 && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-bold animate-bounce">
+                          🔥 {wbStreak} {t('streak')}
+                        </span>
+                      )}
+
+                      <span className="font-extrabold text-amber-600 dark:text-amber-450">
+                        {t('score')}: {wbScore}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Word Cue Card */}
+                  <GlassCard className="p-8 text-center flex flex-col items-center justify-center border border-amber-200/30 dark:border-amber-950/20 shadow-md relative overflow-hidden">
+                    <div className="absolute top-2 right-2 flex gap-1 bg-gray-150/40 dark:bg-white/5 p-1 rounded-xl">
+                      <button
+                        onClick={() => handleWbModeToggle('script')}
+                        className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${
+                          wbMode === 'script' 
+                            ? 'bg-amber-500 text-white shadow-sm' 
+                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-450 dark:hover:text-white'
+                        }`}
+                      >
+                        {t('toggle_script_mode')}
+                      </button>
+                      <button
+                        onClick={() => handleWbModeToggle('phonetic')}
+                        className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${
+                          wbMode === 'phonetic' 
+                            ? 'bg-amber-500 text-white shadow-sm' 
+                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-450 dark:hover:text-white'
+                        }`}
+                      >
+                        {t('toggle_phonetic_mode')}
+                      </button>
+                    </div>
+
+                    <h3 className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 mt-4">
+                      Translate to Kannada
+                    </h3>
+
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-6">
+                      "{LEVELS[currentLevelId - 1].vocab[wbCurrentIdx].english}"
+                    </h2>
+
+                    <button
+                      onClick={() => speakKannadaWord(LEVELS[currentLevelId - 1].vocab[wbCurrentIdx].kannada)}
+                      className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white flex items-center justify-center shadow-md hover:shadow-lg active:scale-95 transition-all group mb-2"
+                      title="Listen to Word"
+                    >
+                      <Volume2 className="h-7 w-7 group-hover:scale-110 transition-transform" />
+                    </button>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
+                      {t('replay_audio')}
+                    </span>
+                  </GlassCard>
+
+                  {/* Answer Slots Row */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-bold text-gray-450 dark:text-gray-500 px-1 uppercase tracking-wider">
+                      Your Assembly (Tap blocks to remove)
+                    </span>
+                    
+                    {/* Shake effect if wrong */}
+                    <motion.div 
+                      variants={{
+                        shake: {
+                          x: [0, -10, 10, -10, 10, -10, 10, 0],
+                          transition: { duration: 0.5 }
+                        }
+                      }}
+                      animate={wbAnswered && !wbIsCorrect ? "shake" : ""}
+                      className="flex flex-wrap items-center justify-center gap-3 p-4 bg-gray-50/50 dark:bg-[#16112a]/20 border border-gray-200/50 dark:border-white/5 rounded-2xl min-h-[82px] w-full"
+                    >
+                      {/* We render slots for target syllables length */}
+                      {(() => {
+                        const vocabItem = LEVELS[currentLevelId - 1].vocab[wbCurrentIdx];
+                        const syllableSource = wbMode === 'script' 
+                          ? (vocabItem.syllables || []) 
+                          : (vocabItem.phoneticSyllables || []);
+
+                        return syllableSource.map((_, idx) => {
+                          const hasBlock = wbSelectedBlockIds.length > idx;
+                          const blockId = hasBlock ? wbSelectedBlockIds[idx] : null;
+                          // Find the block details from the pool
+                          const block = blockId ? wbScrambledPool.find(b => b.id === blockId) : null;
+                          
+                          let slotBorderClass = "border-dashed border-gray-300 dark:border-[#2a2440]";
+                          let slotBgClass = "bg-transparent";
+                          
+                          if (wbAnswered) {
+                            if (wbIsCorrect) {
+                              slotBorderClass = "border-green-500";
+                              slotBgClass = "bg-green-500/10 text-green-700 dark:text-green-400";
+                            } else {
+                              slotBorderClass = "border-red-500";
+                              slotBgClass = "bg-red-500/10 text-red-700 dark:text-red-400";
+                            }
+                          } else if (hasBlock) {
+                            slotBorderClass = "border-amber-400 dark:border-amber-800";
+                            slotBgClass = "bg-amber-50/70 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 hover:scale-[1.03]";
+                          }
+
+                          return (
+                            <button
+                              key={idx}
+                              disabled={!hasBlock || wbAnswered}
+                              onClick={() => block && handleWbPlacedBlockClick(block.id)}
+                              className={`h-12 min-w-[56px] px-4 rounded-xl border-2 font-bold text-base transition-all flex items-center justify-center ${slotBorderClass} ${slotBgClass}`}
+                            >
+                              <AnimatePresence mode="wait">
+                                {block ? (
+                                  <motion.span
+                                    key={block.id}
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    className="font-kannada font-extrabold"
+                                  >
+                                    {block.text}
+                                  </motion.span>
+                                ) : (
+                                  <span className="opacity-0">_</span>
+                                )}
+                              </AnimatePresence>
+                            </button>
+                          );
+                        });
+                      })()}
+                    </motion.div>
+                  </div>
+
+                  {/* Scrambled Syllable Block Pool */}
+                  <div className="flex flex-col gap-2 mt-2">
+                    <span className="text-xs font-bold text-gray-455 dark:text-gray-550 px-1 uppercase tracking-wider">
+                      Syllables Pool (Tap to place)
+                    </span>
+                    <div className="flex flex-wrap items-center justify-center gap-3 p-6 bg-white/40 dark:bg-[#16112a]/30 border border-gray-200/50 dark:border-white/5 rounded-3xl min-h-[92px]">
+                      {wbScrambledPool.map((block) => {
+                        const isPlaced = wbSelectedBlockIds.includes(block.id);
+                        
+                        return (
+                          <button
+                            key={block.id}
+                            disabled={isPlaced || wbAnswered}
+                            onClick={() => handleWbBlockClick(block.id)}
+                            className={`h-12 min-w-[56px] px-4 rounded-xl border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-800 dark:text-white font-extrabold text-base shadow-sm hover:shadow hover:border-amber-400 dark:hover:border-amber-900 active:scale-95 transition-all font-kannada flex items-center justify-center ${
+                              isPlaced ? 'opacity-0 pointer-events-none' : ''
+                            }`}
+                          >
+                            {block.text}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Actions Bar */}
+                  <div className="flex items-center gap-3 mt-4">
+                    <button
+                      onClick={() => {
+                        playSynthSound('click');
+                        setWbSelectedBlockIds([]);
+                      }}
+                      disabled={wbSelectedBlockIds.length === 0 || wbAnswered}
+                      className="px-5 py-3 border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-775 dark:text-gray-300 font-bold rounded-xl text-sm transition-all hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      {t('clear')}
+                    </button>
+                    
+                    <button
+                      onClick={checkWordBuilderAnswer}
+                      disabled={
+                        wbSelectedBlockIds.length !== (
+                          wbMode === 'script'
+                            ? (LEVELS[currentLevelId - 1].vocab[wbCurrentIdx].syllables?.length || 0)
+                            : (LEVELS[currentLevelId - 1].vocab[wbCurrentIdx].phoneticSyllables?.length || 0)
+                        ) || wbAnswered
+                      }
+                      className="flex-grow py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl text-sm transition-all hover:from-amber-600 hover:to-orange-600 disabled:from-gray-300 disabled:to-gray-400 dark:disabled:from-white/5 dark:disabled:to-white/5 disabled:text-gray-450 dark:disabled:text-gray-650 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      {t('check_answer')}
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Feedback Banner */}
+                  <div className="h-8 text-center text-sm font-bold">
+                    <AnimatePresence>
+                      {wbAnswered && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          className={wbIsCorrect ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}
+                        >
+                          {wbIsCorrect 
+                            ? `🎉 ${t('correct') || 'Correct!'}` 
+                            : `😢 ${t('incorrect') || 'Incorrect!'} (Try again)`
+                          }
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              )}
+
+              {gameMode === 'wordbuilder' && gameState === 'complete' && (
+                <motion.div
+                  key="wb-complete"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full py-6 text-center"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-xl mx-auto shadow-2xl relative overflow-hidden border border-amber-200/30">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-amber-400/20 dark:bg-amber-900/10 rounded-full blur-[80px] -z-10" />
+
+                    {wbLives === 0 ? (
+                      // GAME OVER SCREEN
+                      <>
+                        <div className="w-14 h-14 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-6 text-red-500">
+                          <Heart className="h-7 w-7" />
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('game_over') || 'Game Over!'}
+                        </h2>
+                        <p className="text-sm text-gray-555 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          {t('game_over_desc')}
+                        </p>
+                      </>
+                    ) : (
+                      // VICTORY SCREEN
+                      <>
+                        <div className="flex justify-center gap-1 mb-6">
+                          {[...Array(3)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ scale: 0, rotate: -20 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ delay: i * 0.15, type: 'spring', stiffness: 200 }}
+                            >
+                              <Star 
+                                className={`h-10 w-10 ${
+                                  i < calculateStarsSq(wbScore) 
+                                    ? 'text-amber-400 fill-amber-400 filter drop-shadow-md' 
+                                    : 'text-gray-300 dark:text-gray-700'
+                                }`} 
+                              />
+                            </motion.div>
+                          ))}
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('victory_word_builder')}
+                        </h2>
+                        <p className="text-sm text-gray-555 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          {t('victory_word_builder_desc')}
+                        </p>
+                      </>
+                    )}
+
+                    {/* Stats display */}
+                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-8 bg-white/50 dark:bg-[#16112a]/30 border border-gray-100 dark:border-white/5 p-4 rounded-2xl">
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-550">{t('score')}</div>
+                        <div className="text-xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">{wbScore}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-550">{t('high_score')}</div>
+                        <div className="text-xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">
+                          {Math.max(wbHighScores[currentLevelId] || 0, wbScore)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                      <button
+                        onClick={() => initWordBuilder(currentLevelId)}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-750 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 rounded-full font-bold transition-all text-sm"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        Play Again
+                      </button>
+
+                      <button
+                        onClick={() => setGameState('idle')}
+                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-md shadow-amber-600/20 hover:shadow-lg transition-all text-sm"
                       >
                         Back to Levels
                         <Trophy className="h-4 w-4" />

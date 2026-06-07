@@ -380,6 +380,16 @@
     "select_game": "ಆಟದ ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ",
     "play_now": "ಈಗ ಪ್ಲೇ ಮಾಡಿ",
     "correct": "ಸರಿ!",
-    "incorrect": "ತಪ್ಪು!"
+    "incorrect": "ತಪ್ಪು!",
+    "game3_title": "ಪದ ಜೋಡಣೆ",
+    "game3_desc": "ಕನ್ನಡ ಪದದ ಸಿಲೆಬಲ್‌ಗಳನ್ನು ಜೋಡಿಸಿ ಪದ ರಚಿಸಿ. ಕಾಗುಣಿತ ಮತ್ತು ರಚನೆಯನ್ನು ಕಲಿಯಿರಿ!",
+    "victory_word_builder": "ಪದ ರಚನೆಗಾರ!",
+    "victory_word_builder_desc": "ಅದ್ಭುತ! ನೀವು ಈ ಹಂತದ ಎಲ್ಲಾ ಪದಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಜೋಡಿಸಿದ್ದೀರಿ!",
+    "toggle_script_mode": "ಅಕ್ಷರ ಮೋಡ್",
+    "toggle_phonetic_mode": "ಫೋನೆಟಿಕ್ ಮೋಡ್",
+    "check_answer": "ಪರಿಶೀಲಿಸಿ",
+    "clear": "ಮರುಹೊಂದಿಸಿ",
+    "word_builder_title": "ಪದ ಜೋಡಣೆ",
+    "word_builder_desc": "ಕನ್ನಡ ಪದವನ್ನು ಸರಿಯಾಗಿ ಜೋಡಿಸಲು ಬ್ಲಾಕ್‌ಗಳನ್ನು ಮರುಕ್ರಮಗೊಳಿಸಿ."
   }
 }

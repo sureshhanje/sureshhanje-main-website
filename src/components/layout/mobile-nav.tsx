@@ -9,12 +9,14 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { getLocalizedPath, isActiveNavLink } from '@/lib/navigation';
 import { cn } from '@/lib/utils';
+import { CgGames } from 'react-icons/cg';
 
 const menuItems = [
   { key: 'home', href: '/', icon: Home },
   { key: 'about', href: '/about', icon: User },
   { key: 'courses', href: '/courses', icon: BookOpen },
   { key: 'reviews', href: '/reviews', icon: Star },
+  { key: 'games', href: '/games', icon: CgGames },
   { key: 'demo', href: '/demo', icon: Calendar },
   { key: 'faq', href: '/faq', icon: HelpCircle },
   { key: 'contact', href: '/contact', icon: Phone },
@@ -64,27 +66,27 @@ export function MobileNav({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     const isActive = isActiveNavLink(pathname, locale, item.href);
 
                     return (
-                    <motion.div
-                      key={item.key}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                    >
-                      <Link
-                        href={getLocalizedPath(locale, item.href)}
-                        onClick={onClose}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={cn(
-                          'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-sm',
-                          isActive
-                            ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-400 font-semibold'
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
-                        )}
+                      <motion.div
+                        key={item.key}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.04 }}
                       >
-                        <item.icon className="h-4 w-4" />
-                        <span>{t(item.key)}</span>
-                      </Link>
-                    </motion.div>
+                        <Link
+                          href={getLocalizedPath(locale, item.href)}
+                          onClick={onClose}
+                          aria-current={isActive ? 'page' : undefined}
+                          className={cn(
+                            'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-sm',
+                            isActive
+                              ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-400 font-semibold'
+                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
+                          )}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          <span>{t(item.key)}</span>
+                        </Link>
+                      </motion.div>
                     );
                   })}
                 </div>
