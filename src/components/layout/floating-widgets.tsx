@@ -25,10 +25,10 @@ export function FloatingWidgets() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             onClick={scrollToTop}
-            className="w-12 h-12 rounded-full glass-card flex items-center justify-center hover-lift text-primary-600 dark:text-primary-400"
+            className="w-10 h-10 rounded-full bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-gray-600 dark:text-gray-400"
             aria-label="Back to top"
           >
-            <ArrowUp className="h-5 w-5" />
+            <ArrowUp className="h-4 w-4" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -37,12 +37,12 @@ export function FloatingWidgets() {
         href={siteConfig.links.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-white shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-1 transition-all duration-300"
-        whileHover={{ scale: 1.1 }}
+        className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30 hover:-translate-y-0.5 transition-all duration-200"
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Chat on WhatsApp"
       >
-        <MessageCircle className="h-6 w-6" />
+        <MessageCircle className="h-5 w-5" />
       </motion.a>
     </div>
   );

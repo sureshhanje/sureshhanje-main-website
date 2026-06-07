@@ -73,6 +73,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
+import { PlayfulBackground } from '@/components/layout/playful-background';
+
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const messages = await getMessages();
@@ -108,11 +110,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="min-h-screen flex flex-col bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-200 antialiased">
+      <body className="min-h-screen flex flex-col bg-surface-light dark:bg-surface-dark text-gray-900 dark:text-gray-100 antialiased">
         <Providers locale={locale} messages={messages}>
+          <PlayfulBackground />
           <ScrollProgress />
           <Navbar />
-          <main className="flex-1 min-h-0">{children}</main>
+          <main className="flex-1 min-h-0 relative z-10">{children}</main>
           <Footer />
           <FloatingWidgets />
           <VercelStats />

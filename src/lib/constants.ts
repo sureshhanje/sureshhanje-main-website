@@ -26,21 +26,11 @@ export const siteConfig = {
 export const navItems: NavItem[] = [
   { labelKey: 'nav.home', href: '/' },
   { labelKey: 'nav.about', href: '/about' },
-  {
-    labelKey: 'nav.courses',
-    href: '/courses',
-    children: [
-      { labelKey: 'nav.courses_school', href: '/courses?category=school' },
-      { labelKey: 'nav.courses_puc', href: '/courses?category=puc' },
-      { labelKey: 'nav.courses_degree', href: '/courses?category=degree' },
-      { labelKey: 'nav.courses_spoken', href: '/courses?category=spoken' },
-      { labelKey: 'nav.courses_competitive', href: '/courses?category=competitive' },
-    ],
-  },
+  { labelKey: 'nav.courses', href: '/courses' },
   { labelKey: 'nav.reviews', href: '/reviews' },
   { labelKey: 'nav.demo', href: '/demo' },
   // { labelKey: 'nav.blog', href: '/blog' },
-  { labelKey: 'nav.resources', href: '/resources' },
+  // { labelKey: 'nav.resources', href: '/resources' },
   { labelKey: 'nav.faq', href: '/faq' },
   { labelKey: 'nav.contact', href: '/contact' },
 ];

@@ -24,10 +24,10 @@ const resourceLinks = [
 ] as const;
 
 const socialLinks = [
-  { icon: FacebookIcon, href: siteConfig.links.facebook, label: 'Facebook', hover: 'hover:text-blue-500 hover:bg-blue-500/10' },
-  { icon: TwitterIcon, href: siteConfig.links.twitter, label: 'Twitter', hover: 'hover:text-sky-500 hover:bg-sky-500/10' },
-  { icon: InstagramIcon, href: siteConfig.links.instagram, label: 'Instagram', hover: 'hover:text-pink-500 hover:bg-pink-500/10' },
-  { icon: YoutubeIcon, href: siteConfig.links.youtube, label: 'YouTube', hover: 'hover:text-red-500 hover:bg-red-500/10' },
+  { icon: FacebookIcon, href: siteConfig.links.facebook, label: 'Facebook' },
+  { icon: TwitterIcon, href: siteConfig.links.twitter, label: 'Twitter' },
+  { icon: InstagramIcon, href: siteConfig.links.instagram, label: 'Instagram' },
+  { icon: YoutubeIcon, href: siteConfig.links.youtube, label: 'YouTube' },
 ] as const;
 
 function FooterNavLink({
@@ -48,7 +48,7 @@ function FooterNavLink({
       <Link
         href={getLocalizedPath(locale, href)}
         aria-current={isActive ? 'page' : undefined}
-        className={cn('inline-block text-sm transition-all duration-200', footerLinkClass(isActive))}
+        className={cn('inline-block text-sm transition-colors duration-200', footerLinkClass(isActive))}
       >
         {label}
       </Link>
@@ -62,35 +62,29 @@ export function Footer() {
   const pathname = usePathname();
 
   return (
-    <footer className="relative mt-auto border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-950/50 backdrop-blur-sm">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+    <footer className="border-t border-gray-100 dark:border-[#1e1835] bg-white dark:bg-[#0c0a14]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link href={getLocalizedPath(locale, '/')} className="inline-block group">
-              <h3 className="font-bold text-lg text-slate-800 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            <Link href={getLocalizedPath(locale, '/')} className="inline-flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold text-sm">ಕ</div>
+              <span className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {siteConfig.name.split(' - ')[0]}
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Kannada Tutor</p>
+              </span>
             </Link>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-4 leading-relaxed max-w-xs">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 leading-relaxed max-w-xs">
               {t('description')}
             </p>
             <div className="flex items-center gap-2 mt-5">
-              {socialLinks.map(({ icon: Icon, href, label, hover }) => (
+              {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className={cn(
-                    'p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80',
-                    'text-slate-500 dark:text-slate-400 transition-all duration-200',
-                    hover
-                  )}
+                  className="p-2 rounded-full text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all duration-200"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -100,10 +94,10 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-800 dark:text-white mb-4">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
               {t('quickLinks')}
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {quickLinks.map(({ href, key }) => (
                 <FooterNavLink
                   key={key}
@@ -118,10 +112,10 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-800 dark:text-white mb-4">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
               {t('resources')}
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {resourceLinks.map(({ href, key }) => (
                 <FooterNavLink
                   key={key}
@@ -136,28 +130,24 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-800 dark:text-white mb-4">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
               {t('contact')}
             </h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
-                  <Mail className="w-4 h-4 text-primary-500" />
-                </span>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-gray-400" />
                 <a
                   href={`mailto:${siteConfig.links.email.replace('mailto:', '')}`}
-                  className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all pt-1"
+                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all"
                 >
                   {siteConfig.links.email.replace('mailto:', '')}
                 </a>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
-                  <Phone className="w-4 h-4 text-primary-500" />
-                </span>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-gray-400" />
                 <a
                   href={siteConfig.links.phone}
-                  className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors pt-1"
+                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   {siteConfig.links.phone.replace('tel:', '')}
                 </a>
@@ -167,13 +157,13 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+        <div className="mt-12 pt-6 border-t border-gray-100 dark:border-[#1e1835] flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             © {new Date().getFullYear()} {siteConfig.name.split(' - ')[0]}. {t('allRightsReserved')}
           </p>
-          <div className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
             {t('madeWith')}
-            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+            <Heart className="w-3 h-3 text-red-400 fill-red-400" />
           </div>
         </div>
       </div>

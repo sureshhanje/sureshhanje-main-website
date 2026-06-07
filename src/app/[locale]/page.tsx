@@ -2,9 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
-import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, GraduationCap, Users, Clock, Star, CheckCircle, Monitor, Sparkles } from 'lucide-react';
-import { GradientOrbs } from '@/components/shared/gradient-orbs';
+import { ArrowRight, BookOpen, GraduationCap, Users, Clock, Star, CheckCircle, Monitor, Sparkles, Play } from 'lucide-react';
 import { GlassCard } from '@/components/shared/glass-card';
 import { AnimatedCounter } from '@/components/shared/animated-counter';
 import { FadeIn } from '@/components/animations/fade-in';
@@ -13,60 +11,63 @@ import { SectionHeader } from '@/components/shared/section-header';
 import { siteConfig } from '@/lib/constants';
 import { courses } from '@/data/courses';
 import { reviews } from '@/data/reviews';
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const t = useTranslations();
   const locale = useLocale();
   const getHref = (href: string) => `/${locale}${href}`;
   const popularCourses = courses.filter(c => c.popular).slice(0, 4);
-  const topReviews = reviews.filter(r => r.rating === 5).slice(0, 6);
+  const topReviews = reviews.filter(r => r.rating === 5).slice(0, 4);
 
   return (
     <>
-      {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center kannada-pattern overflow-hidden">
-        <GradientOrbs />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+      {/* ===== HERO — Left text, Right photo with playful kid-friendly details ===== */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Subtle purple radial glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-200/20 dark:bg-primary-900/10 rounded-full blur-[120px]" />
+
+        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left side: Text & CTAs */}
+            <div className="lg:col-span-7 text-left flex flex-col items-start">
+              {/* Badge pill */}
               <FadeIn delay={0.1}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-sm font-medium text-primary-600 dark:text-primary-400 mb-6">
-                  <Sparkles className="h-4 w-4" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] text-[13px] font-medium text-gray-600 dark:text-gray-400 mb-6 shadow-sm">
+                  <Sparkles className="h-3.5 w-3.5 text-primary-500" />
                   {t('home.hero.badge')}
                 </div>
               </FadeIn>
 
+              {/* Main heading */}
               <FadeIn delay={0.2}>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight mb-6">
-                  <span className="block text-slate-800 dark:text-white">{t('home.hero.greeting')}</span>
-                  <span className="block gradient-text mt-2">{t('home.hero.name')}</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[66px] font-bold tracking-tight leading-[1.1] mb-6">
+                  <span className="text-gray-900 dark:text-white">{t('home.hero.greeting')}</span>
+                  <br />
+                  <span className="text-primary-600 dark:text-primary-400">{t('home.hero.name')}</span>
                 </h1>
               </FadeIn>
 
+              {/* Subtitle */}
               <FadeIn delay={0.3}>
-                <p className="text-xl lg:text-2xl text-primary-700 dark:text-primary-300 font-medium mb-4">
-                  {t('home.hero.tagline')}
-                </p>
-              </FadeIn>
-
-              <FadeIn delay={0.4}>
-                <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-xl leading-relaxed">
                   {t('home.hero.subtitle')}
                 </p>
               </FadeIn>
 
-              <FadeIn delay={0.5}>
-                <div className="flex flex-col sm:flex-row gap-4">
+              {/* CTA Buttons */}
+              <FadeIn delay={0.4}>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
                   <Link
                     href={getHref('/demo')}
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 gradient-bg text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-1 transition-all duration-300 text-lg"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-full shadow-md shadow-primary-600/20 hover:shadow-lg hover:shadow-primary-600/30 transition-all duration-200 text-[15px]"
                   >
                     {t('home.hero.cta1')}
-                    <ArrowRight className="h-5 w-5" />
+                    <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href={getHref('/courses')}
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 glass-card text-primary-700 dark:text-primary-300 font-semibold rounded-2xl hover-lift text-lg"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] text-gray-700 dark:text-gray-300 font-semibold rounded-full hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-[15px]"
                   >
                     {t('home.hero.cta2')}
                   </Link>
@@ -74,114 +75,129 @@ export default function HomePage() {
               </FadeIn>
             </div>
 
-            {/* Hero Visual */}
-            <FadeIn direction="right" delay={0.3}>
-              <div className="relative hidden lg:block">
-                <div className="w-full aspect-square max-w-lg mx-auto relative">
-                  <div className="absolute inset-0 gradient-bg rounded-3xl opacity-20 blur-2xl" />
-                  <div className="absolute inset-4 glass-card rounded-3xl flex flex-col items-center justify-center p-8 overflow-hidden">
-                    <img
-                      src="/placeholder.jpeg"
-                      alt="Kannada Tutor"
-                      className="absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-3xl" />
-                    <div className="relative z-10 flex flex-col items-center justify-end h-full">
-                      <div className="text-2xl font-bold gradient-text">ಸುರೇಶ ಹಂಜೆ</div>
-                      <div className="text-slate-950 dark:text-slate-950 text-center">ಕನ್ನಡ ಶಿಕ್ಷಕ</div>
-                      
-                    </div>
+            {/* Right side: Photo card with cute kid-friendly style */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <FadeIn delay={0.5} className="relative w-full max-w-sm sm:max-w-md lg:max-w-none">
+                {/* Playful backdrop shapes for kids */}
+                <div className="absolute -top-4 -left-4 w-24 h-24 bg-amber-400/20 dark:bg-amber-400/10 rounded-full blur-xl" />
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary-400/20 dark:bg-primary-500/10 rounded-3xl blur-xl" />
+
+                {/* Playful hand-drawn-style border frame */}
+                <div className="absolute inset-0 border-2 border-dashed border-primary-300 dark:border-primary-850 rounded-3xl translate-x-3.5 translate-y-3.5 -z-10" />
+
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200/80 dark:border-[#2a2440] bg-white dark:bg-[#16112a] hover-lift">
+                  <img
+                    src="/placeholder.jpeg"
+                    alt="Suresh Hanje — Kannada Tutor"
+                    className="w-full aspect-[4/3] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
+                    <div className="text-lg font-bold text-white">ಸುರೇಶ ಹಂಜೆ</div>
+                    <div className="text-sm text-white/70">ಕನ್ನಡ ಶಿಕ್ಷಕ • 15+ Years</div>
                   </div>
                 </div>
-              </div>
-            </FadeIn>
+              </FadeIn>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ===== STATS ===== */}
-      <section className="relative -mt-8 z-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <div className="glass-card rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* ===== STATS — Clean row ===== */}
+      <section className="relative -mt-4 z-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               { value: siteConfig.stats.experience, suffix: '+', label: t('home.stats.experience'), icon: Clock },
               { value: siteConfig.stats.students, suffix: '+', label: t('home.stats.students'), icon: Users },
               { value: siteConfig.stats.classes, suffix: '+', label: t('home.stats.classes'), icon: BookOpen },
               { value: siteConfig.stats.rating, suffix: '', label: t('home.stats.rating'), icon: Star, decimals: 1 },
             ].map((stat, i) => (
-              <FadeIn key={i} delay={i * 0.1} className="text-center">
-                <stat.icon className="h-6 w-6 text-primary-500 mx-auto mb-2" />
-                <div className="text-3xl md:text-4xl font-bold gradient-text">
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} decimals={stat.decimals || 0} />
+              <FadeIn key={i} delay={i * 0.1}>
+                <div className="stat-card">
+                  <stat.icon className="h-5 w-5 text-primary-500 mx-auto mb-2" />
+                  <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                    <AnimatedCounter end={stat.value} suffix={stat.suffix} decimals={stat.decimals || 0} />
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</div>
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">{stat.label}</div>
               </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== WHY CHOOSE ===== */}
+      {/* ===== WHY CHOOSE — Feature cards with purple tint like Krowtt ===== */}
       <section className="section-padding relative">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <SectionHeader titleKey="whyChoose.title" subtitleKey="whyChoose.subtitle" namespace="home" />
-          <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full mt-10">
             {[
-              { icon: Clock, titleKey: 'exp_title', descKey: 'exp_desc', color: 'text-blue-500' },
-              { icon: Monitor, titleKey: 'online_title', descKey: 'online_desc', color: 'text-green-500' },
-              { icon: GraduationCap, titleKey: 'levels_title', descKey: 'levels_desc', color: 'text-purple-500' },
-              { icon: Sparkles, titleKey: 'demo_title', descKey: 'demo_desc', color: 'text-amber-500' },
-            ].map((item, i) => (
-              <StaggerItem key={i}>
-                <GlassCard className="text-center h-full">
-                  <div className={`inline-flex p-3 rounded-2xl bg-primary-50 dark:bg-primary-900/20 mb-4 ${item.color}`}>
-                    <item.icon className="h-7 w-7" />
+              { icon: Clock, titleKey: 'exp_title', descKey: 'exp_desc' },
+              { icon: Monitor, titleKey: 'online_title', descKey: 'online_desc' },
+              { icon: GraduationCap, titleKey: 'levels_title', descKey: 'levels_desc' },
+              { icon: Sparkles, titleKey: 'demo_title', descKey: 'demo_desc' },
+            ].map((item, idx) => {
+              const colSpan = idx % 4 === 0 || idx % 4 === 3 ? 'md:col-span-4' : 'md:col-span-8';
+              return (
+                <div key={idx} className={cn('col-span-1 flex flex-col', colSpan)}>
+                  <div className="feature-card-bg rounded-2xl p-6 h-full hover-lift flex flex-col justify-between">
+                    <div>
+                      <div className="inline-flex p-2.5 rounded-xl bg-white/80 dark:bg-white/5 border border-white/60 dark:border-white/10 mb-4 shadow-sm">
+                        <item.icon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                      </div>
+                      <h3 className="text-base font-semibold mb-2 text-gray-900 dark:text-white">
+                        {t(`home.whyChoose.${item.titleKey}`)}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        {t(`home.whyChoose.${item.descKey}`)}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-slate-800 dark:text-white">
-                    {t(`home.whyChoose.${item.titleKey}`)}
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    {t(`home.whyChoose.${item.descKey}`)}
-                  </p>
-                </GlassCard>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* ===== FEATURED COURSES ===== */}
-      <section className="section-padding relative bg-slate-50/50 dark:bg-slate-900/50">
-        <GradientOrbs />
-        <div className="max-w-7xl mx-auto relative z-10">
+      <section className="section-padding relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <SectionHeader titleKey="featured.title" subtitleKey="featured.subtitle" namespace="home" />
-          <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
-            {popularCourses.map((course) => (
-              <StaggerItem key={course.id}>
-                <GlassCard className="h-full flex flex-col">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20">
-                      <BookOpen className="h-5 w-5 text-primary-500" />
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full mt-10">
+            {popularCourses.map((course, idx) => {
+              const colSpan = idx % 4 === 0 || idx % 4 === 3 ? 'md:col-span-4' : 'md:col-span-8';
+              return (
+                <div key={course.id} className={cn('col-span-1 flex flex-col', colSpan)}>
+                  <GlassCard className="hover-lift p-6 flex flex-col justify-between h-full w-full">
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-2 rounded-xl bg-primary-50 dark:bg-primary-950/40">
+                          <BookOpen className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                        </div>
+                        {course.popular && (
+                          <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-primary-600 text-white tracking-wide uppercase">
+                            {t('courses.popular')}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-base font-semibold mb-2 text-gray-900 dark:text-white">{t(course.titleKey)}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">{t(course.descriptionKey)}</p>
                     </div>
-                    {course.popular && (
-                      <span className="px-2.5 py-1 text-xs font-semibold rounded-full gradient-bg text-white">
-                        {t('courses.popular')}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2 text-slate-800 dark:text-white">{t(course.titleKey)}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 flex-1">{t(course.descriptionKey)}</p>
-                  <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span>{course.duration}</span>
-                    <span>{course.level}</span>
-                  </div>
-                </GlassCard>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
-          <FadeIn className="text-center mt-10">
-            <Link href={getHref('/courses')} className="inline-flex items-center gap-2 px-6 py-3 gradient-bg text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-              {t('home.featured.viewAll')} <ArrowRight className="h-4 w-4" />
+                    <div className="flex items-center justify-between text-[11px] text-gray-400 font-medium uppercase tracking-wide mt-auto pt-2 border-t border-gray-100/60 dark:border-white/5">
+                      <span>{course.duration}</span>
+                      <span>{course.level}</span>
+                    </div>
+                  </GlassCard>
+                </div>
+              );
+            })}
+          </div>
+          <FadeIn className="text-center mt-6">
+            <Link href={getHref('/courses')} className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-full shadow-sm shadow-primary-600/20 transition-all text-sm">
+              {t('home.featured.viewAll')} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </FadeIn>
         </div>
@@ -189,54 +205,60 @@ export default function HomePage() {
 
       {/* ===== TESTIMONIALS ===== */}
       <section className="section-padding relative">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <SectionHeader titleKey="testimonials.title" subtitleKey="testimonials.subtitle" namespace="home" />
-          <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.08}>
-            {topReviews.map((review) => (
-              <StaggerItem key={review.id}>
-                <GlassCard className="h-full">
-                  <div className="flex items-center gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 mb-4 text-sm leading-relaxed">&ldquo;{locale === 'kn' ? review.textKn : review.text}&rdquo;</p>
-                  <div className="flex items-center gap-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50">
-                    <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-semibold text-sm">
-                      {(locale === 'kn' ? review.nameKn : review.name).charAt(0)}
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full mt-10">
+            {topReviews.map((review, idx) => {
+              const colSpan = idx % 4 === 0 || idx % 4 === 3 ? 'md:col-span-4' : 'md:col-span-8';
+              return (
+                <div key={review.id} className={cn('col-span-1 flex flex-col', colSpan)}>
+                  <GlassCard className="hover-lift p-6 flex flex-col justify-between h-full w-full">
                     <div>
-                      <div className="font-medium text-sm text-slate-800 dark:text-white">{locale === 'kn' ? review.nameKn : review.name}</div>
-                      <div className="text-xs text-slate-500">{review.class}</div>
+                      <div className="flex items-center gap-0.5 mb-3">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                        ))}
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">&ldquo;{locale === 'kn' ? review.textKn : review.text}&rdquo;</p>
                     </div>
-                  </div>
-                </GlassCard>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
+                    <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-[#2a2440]">
+                      <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-700 dark:text-primary-400 font-semibold text-sm shrink-0">
+                        {(locale === 'kn' ? review.nameKn : review.name).charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm text-gray-900 dark:text-white">{locale === 'kn' ? review.nameKn : review.name}</div>
+                        <div className="text-[11px] text-gray-400">{review.class}</div>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </div>
+              );
+            })}
+          </div>
           <FadeIn className="text-center mt-10">
-            <Link href={getHref('/reviews')} className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-medium hover:underline">
-              {t('home.testimonials.viewAll')} <ArrowRight className="h-4 w-4" />
+            <Link href={getHref('/reviews')} className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-medium text-sm hover:underline">
+              {t('home.testimonials.viewAll')} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </FadeIn>
         </div>
       </section>
 
-      {/* ===== CTA ===== */}
-      <section className="section-padding relative overflow-hidden">
-        <div className="absolute inset-0 gradient-bg opacity-95" />
-        <GradientOrbs />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+      {/* ===== CTA — Clean purple section ===== */}
+      <section className="py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800" />
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="max-w-3xl mx-auto text-center relative z-10">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">{t('home.cta.title')}</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight">{t('home.cta.title')}</h2>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">{t('home.cta.subtitle')}</p>
+            <p className="text-base text-primary-100 mb-8 max-w-xl mx-auto">{t('home.cta.subtitle')}</p>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-2xl mx-auto">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10">
               {['f1', 'f2', 'f3', 'f4'].map((key) => (
-                <div key={key} className="flex items-center gap-2 text-sm text-white/90">
+                <div key={key} className="flex items-center gap-1.5 text-sm text-white/90">
                   <CheckCircle className="h-4 w-4 text-green-300 shrink-0" />
                   <span>{t(`home.cta.${key}`)}</span>
                 </div>
@@ -246,10 +268,10 @@ export default function HomePage() {
           <FadeIn delay={0.3}>
             <Link
               href={getHref('/demo')}
-              className="inline-flex items-center gap-2 px-10 py-4 bg-white text-primary-700 font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-lg"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-primary-700 font-bold rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-200 text-[15px]"
             >
               {t('home.cta.button')}
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </FadeIn>
         </div>

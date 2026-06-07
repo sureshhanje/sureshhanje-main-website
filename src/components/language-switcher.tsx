@@ -29,10 +29,10 @@ export function LanguageSwitcher() {
     <button
       onClick={switchLocale}
       disabled={isPending}
-      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 dark:bg-white/5 backdrop-blur-sm border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-300 text-sm font-medium disabled:opacity-50"
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors duration-200 disabled:opacity-50"
       aria-label="Switch language"
     >
-      <Globe className="h-4 w-4" />
+      <Globe className="h-3.5 w-3.5" />
       <span>{locale === 'en' ? 'ಕನ್ನಡ' : 'English'}</span>
     </button>
   );
