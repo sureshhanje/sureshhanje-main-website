@@ -17,7 +17,7 @@ const menuItems = [
   { key: 'reviews', href: '/reviews', icon: Star },
   { key: 'demo', href: '/demo', icon: Calendar },
   // { key: 'blog', href: '/blog', icon: FileText },
-  { key: 'resources', href: '/resources', icon: Download },
+  // { key: 'resources', href: '/resources', icon: Download },
   { key: 'faq', href: '/faq', icon: HelpCircle },
   { key: 'contact', href: '/contact', icon: Phone },
 ];

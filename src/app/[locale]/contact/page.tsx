@@ -26,8 +26,8 @@ export default function ContactPage() {
       </section>
 
       <section className="section-padding -mt-8">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
-          <FadeIn direction="left">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-1 gap-12">
+          {/* <FadeIn direction="left">
             <GlassCard hover={false} className="p-8">
               {sent ? (
                 <div className="text-center py-12">
@@ -57,10 +57,10 @@ export default function ContactPage() {
                 </form>
               )}
             </GlassCard>
-          </FadeIn>
+          </FadeIn> */}
 
           <FadeIn direction="right">
-            <div className="space-y-6">
+            <div className="flex flex-col gap-8">
               <GlassCard>
                 <h3 className="text-xl font-semibold gradient-text mb-6">{t('info_title')}</h3>
                 <div className="space-y-4">

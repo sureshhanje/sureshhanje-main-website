@@ -79,16 +79,18 @@ export default function HomePage() {
               <div className="relative hidden lg:block">
                 <div className="w-full aspect-square max-w-lg mx-auto relative">
                   <div className="absolute inset-0 gradient-bg rounded-3xl opacity-20 blur-2xl" />
-                  <div className="absolute inset-4 glass-card rounded-3xl flex flex-col items-center justify-center p-8">
-                    <div className="text-8xl mb-4 text-primary-500">ಕ</div>
-                    <div className="text-2xl font-bold gradient-text mb-2">ಸುರೇಶ ಹಂಜೆ</div>
-                    <div className="text-slate-500 dark:text-slate-400 text-center">ಕನ್ನಡ ಶಿಕ್ಷಕ</div>
-                    <div className="mt-6 flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 text-amber-400 fill-amber-400" />
-                      ))}
+                  <div className="absolute inset-4 glass-card rounded-3xl flex flex-col items-center justify-center p-8 overflow-hidden">
+                    <img
+                      src="/placeholder.jpeg"
+                      alt="Kannada Tutor"
+                      className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-3xl" />
+                    <div className="relative z-10 flex flex-col items-center justify-end h-full">
+                      <div className="text-2xl font-bold gradient-text">ಸುರೇಶ ಹಂಜೆ</div>
+                      <div className="text-slate-950 dark:text-slate-950 text-center">ಕನ್ನಡ ಶಿಕ್ಷಕ</div>
+                      
                     </div>
-                    <div className="mt-2 text-sm text-slate-500">{siteConfig.stats.rating} / 5.0</div>
                   </div>
                 </div>
               </div>

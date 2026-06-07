@@ -20,7 +20,7 @@ const resourceLinks = [
   // { href: '/blog', key: 'blog' },
   { href: '/faq', key: 'faq' },
   { href: '/reviews', key: 'reviews' },
-  { href: '/resources', key: 'resources' },
+  // { href: '/resources', key: 'resources' },
 ] as const;
 
 const socialLinks = [

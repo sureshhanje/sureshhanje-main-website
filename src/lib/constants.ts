@@ -7,9 +7,9 @@ export const siteConfig = {
   url: 'https://sureshhanje.com',
   ogImage: '/images/og-image.jpg',
   links: {
-    whatsapp: 'https://wa.me/91XXXXXXXXXX',
-    email: 'mailto:suresh.hanje@example.com',
-    phone: 'tel:+91XXXXXXXXXX',
+    whatsapp: 'https://wa.me/919686068162',
+    email: 'mailto:sureshhanje96@gmail.com',
+    phone: 'tel:+919686068162',
     youtube: 'https://youtube.com/@sureshhanje',
     instagram: 'https://instagram.com/sureshhanje',
     facebook: 'https://facebook.com/sureshhanje',
