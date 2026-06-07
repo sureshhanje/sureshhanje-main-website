@@ -3,7 +3,7 @@ import { NavItem } from '@/types';
 export const siteConfig = {
   name: 'Suresh Hanje - Kannada Tutor',
   nameKn: 'ಸುರೇಶ ಹಂಜೆ - ಕನ್ನಡ ಶಿಕ್ಷಕ',
-  description: 'Learn Kannada with Confidence from an Experienced Teacher. 15+ Years Experience, Online Classes, 1st Standard to Degree.',
+  description: 'Best Kannada tutor and online Kannada teacher for school, PUC, degree, spoken Kannada, and competitive exam students. Free demo class available.',
   url: 'https://sureshhanje.com',
   ogImage: '/images/og-image.jpg',
   links: {
