@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { X, Home, User, BookOpen, Star, Calendar, FileText, Download, HelpCircle, Phone, Video, Camera, Share2 } from 'lucide-react';
+import { X, Home, User, BookOpen, Star, Calendar, Download, HelpCircle, Phone, Video, Camera, Share2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { getLocalizedPath, isActiveNavLink } from '@/lib/navigation';
@@ -16,7 +16,7 @@ const menuItems = [
   { key: 'courses', href: '/courses', icon: BookOpen },
   { key: 'reviews', href: '/reviews', icon: Star },
   { key: 'demo', href: '/demo', icon: Calendar },
-  { key: 'blog', href: '/blog', icon: FileText },
+  // { key: 'blog', href: '/blog', icon: FileText },
   { key: 'resources', href: '/resources', icon: Download },
   { key: 'faq', href: '/faq', icon: HelpCircle },
   { key: 'contact', href: '/contact', icon: Phone },

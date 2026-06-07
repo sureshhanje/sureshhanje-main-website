@@ -17,7 +17,7 @@ const quickLinks = [
 ] as const;
 
 const resourceLinks = [
-  { href: '/blog', key: 'blog' },
+  // { href: '/blog', key: 'blog' },
   { href: '/faq', key: 'faq' },
   { href: '/reviews', key: 'reviews' },
   { href: '/resources', key: 'resources' },
