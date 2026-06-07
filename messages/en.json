@@ -14,6 +14,7 @@
     "resources": "Resources",
     "faq": "FAQ",
     "contact": "Contact",
+    "games": "Games",
     "bookDemo": "Book Free Demo"
   },
   "home": {
@@ -324,5 +325,27 @@
     "backToHome": "Back to Home",
     "search": "Search",
     "close": "Close"
+  },
+  "games": {
+    "title": "Kannada Play Zone",
+    "subtitle": "Learn Kannada vocabulary through fun, interactive games!",
+    "game1_title": "Kannada Vocab Quest",
+    "game1_desc": "Match basic English words with their Kannada translations. Perfect for kids and beginners!",
+    "score": "Score",
+    "turns": "Flips",
+    "level": "Level",
+    "level1": "Level 1: Greetings",
+    "level2": "Level 2: Essentials",
+    "level3": "Level 3: Numbers",
+    "level4": "Level 4: Common Phrases",
+    "victory": "Congratulations!",
+    "victory_desc": "You matched all words in this level!",
+    "accuracy": "Accuracy",
+    "time": "Time",
+    "play_again": "Play Again",
+    "next_level": "Next Level",
+    "select_level": "Select Level to Start:",
+    "pronounce_help": "Click matched cards to hear pronunciation",
+    "high_score": "High Score"
   }
 }

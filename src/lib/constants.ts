@@ -28,6 +28,7 @@ export const navItems: NavItem[] = [
   { labelKey: 'nav.about', href: '/about' },
   { labelKey: 'nav.courses', href: '/courses' },
   { labelKey: 'nav.reviews', href: '/reviews' },
+  { labelKey: 'nav.games', href: '/games' },
   { labelKey: 'nav.demo', href: '/demo' },
   // { labelKey: 'nav.blog', href: '/blog' },
   // { labelKey: 'nav.resources', href: '/resources' },

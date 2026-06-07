@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { siteConfig } from '@/lib/constants';
 
-const routes = ['', '/about', '/courses', '/reviews', '/demo', '/faq', '/contact'];
+const routes = ['', '/about', '/courses', '/reviews', '/games', '/demo', '/faq', '/contact'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const locales = ['en', 'kn'];
