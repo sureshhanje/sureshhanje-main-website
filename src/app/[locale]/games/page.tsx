@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, Sparkles, Trophy, RotateCcw, Volume2, VolumeX, 
-  Check, Play, ArrowRight, HelpCircle, Star, Timer, BookOpen
+  Check, Play, ArrowRight, HelpCircle, Star, Timer, BookOpen,
+  Heart, Volume1, RefreshCw
 } from 'lucide-react';
 import { GlassCard } from '@/components/shared/glass-card';
 
@@ -31,6 +32,11 @@ interface Card {
   text: string;
   matchId: string;
   phonetic?: string;
+}
+
+interface Question {
+  correctItem: VocabItem;
+  options: string[];
 }
 
 // Vocab Levels configuration
@@ -86,33 +92,68 @@ export default function GamesPage() {
   const tCommon = useTranslations('common');
   const locale = useLocale();
   
-  // Game States
+  // Game Selector Mode: 'select' (game menu), 'vocab' (vocab match), 'sound' (sound quest)
+  const [gameMode, setGameMode] = useState<'select' | 'vocab' | 'sound'>('select');
+
+  // Game States (Shared)
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'complete'>('idle');
   const [currentLevelId, setCurrentLevelId] = useState(1);
+  const [turns, setTurns] = useState(0);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [highScores, setHighScores] = useState<Record<number, number>>({}); // Vocab Match (best turns)
+  const [sqHighScores, setSqHighScores] = useState<Record<number, number>>({}); // Sound Quest (best score)
+  
+  // Settings (Shared)
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
+
+  // Reusable Audio Context and Speech voices
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  // Vocab Match specific states
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [matchedCardIds, setMatchedCardIds] = useState<string[]>([]);
-  const [turns, setTurns] = useState(0);
-  const [timeSpent, setTimeSpent] = useState(0);
-  const [highScores, setHighScores] = useState<Record<number, number>>({});
-  
-  // Settings
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
+
+  // Sound Quest specific states
+  const [sqQuestions, setSqQuestions] = useState<Question[]>([]);
+  const [sqCurrentIdx, setSqCurrentIdx] = useState(0);
+  const [sqLives, setSqLives] = useState(3);
+  const [sqStreak, setSqStreak] = useState(0);
+  const [sqScore, setSqScore] = useState(0);
+  const [sqSelectedOption, setSqSelectedOption] = useState<string | null>(null);
+  const [sqAnswered, setSqAnswered] = useState(false);
 
   // Load High Scores & TTS voices on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('kannada_games_high_scores');
-      if (saved) {
+      const savedMatch = localStorage.getItem('kannada_games_high_scores');
+      if (savedMatch) {
         try {
-          setHighScores(JSON.parse(saved));
+          setHighScores(JSON.parse(savedMatch));
         } catch (e) {
           console.error(e);
         }
       }
+
+      const savedSq = localStorage.getItem('kannada_games_sq_high_scores');
+      if (savedSq) {
+        try {
+          setSqHighScores(JSON.parse(savedSq));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
       if (window.speechSynthesis) {
-        window.speechSynthesis.getVoices();
+        const updateVoices = () => {
+          setVoices(window.speechSynthesis.getVoices());
+        };
+        updateVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = updateVoices;
+        }
       }
     }
   }, []);
@@ -128,69 +169,105 @@ export default function GamesPage() {
     return () => clearInterval(timerId);
   }, [gameState]);
 
+  // Unlock audio helper to run on click events
+  const unlockAudio = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      // Warm up Speech Synthesis
+      if (window.speechSynthesis) {
+        const unlockUtterance = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(unlockUtterance);
+      }
+      // Warm up Audio Context
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        if (!audioCtxRef.current) {
+          audioCtxRef.current = new AudioContextClass();
+        }
+        if (audioCtxRef.current.state === 'suspended') {
+          audioCtxRef.current.resume();
+        }
+      }
+    } catch (e) {
+      console.error('Audio unlocking error:', e);
+    }
+  };
+
   // Audio Synthesizer using Web Audio API
   const playSynthSound = (type: 'click' | 'match' | 'mismatch' | 'victory') => {
     if (!soundEnabled || typeof window === 'undefined') return;
     try {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioContext) return;
-      const ctx = new AudioContext();
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
       
-      if (type === 'click') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(450, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.08);
-      } else if (type === 'match') {
-        const now = ctx.currentTime;
-        const playBeep = (freq: number, start: number, duration: number) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, start);
-          gain.gain.setValueAtTime(0.12, start);
-          gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(start);
-          osc.stop(start + duration);
-        };
-        playBeep(523.25, now, 0.08); // C5
-        playBeep(659.25, now + 0.07, 0.12); // E5
-      } else if (type === 'mismatch') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(160, ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.18);
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.18);
-      } else if (type === 'victory') {
-        const now = ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5 arpeggio
-        notes.forEach((freq, i) => {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContextClass();
+      }
+      const ctx = audioCtxRef.current;
+      
+      const startSound = () => {
+        if (type === 'click') {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + i * 0.1);
-          gain.gain.setValueAtTime(0.12, now + i * 0.1);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+          osc.frequency.setValueAtTime(450, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + i * 0.1);
-          osc.stop(now + i * 0.1 + 0.25);
-        });
+          osc.start();
+          osc.stop(ctx.currentTime + 0.08);
+        } else if (type === 'match') {
+          const now = ctx.currentTime;
+          const playBeep = (freq: number, start: number, duration: number) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, start);
+            gain.gain.setValueAtTime(0.12, start);
+            gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(start);
+            osc.stop(start + duration);
+          };
+          playBeep(523.25, now, 0.08); // C5
+          playBeep(659.25, now + 0.07, 0.12); // E5
+        } else if (type === 'mismatch') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(160, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.18);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.18);
+        } else if (type === 'victory') {
+          const now = ctx.currentTime;
+          const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5 arpeggio
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.1);
+            gain.gain.setValueAtTime(0.12, now + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.1);
+            osc.stop(now + i * 0.1 + 0.25);
+          });
+        }
+      };
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(startSound);
+      } else {
+        startSound();
       }
     } catch (err) {
       console.error('Audio synthesizer error:', err);
@@ -201,17 +278,69 @@ export default function GamesPage() {
   const speakKannadaWord = (text: string) => {
     if (!ttsEnabled || typeof window === 'undefined' || !window.speechSynthesis) return;
     try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'kn-IN';
+      let retryCount = 0;
       
-      const voices = window.speechSynthesis.getVoices();
-      const knVoice = voices.find(v => v.lang.startsWith('kn') || v.lang.includes('kannada'));
-      if (knVoice) {
-        utterance.voice = knVoice;
+      const speak = () => {
+        const voiceList = window.speechSynthesis.getVoices();
+        
+        // If voices list is empty on quick navigation, retry up to 5 times (500ms max) to prevent premature phonetic fallback
+        if (voiceList.length === 0 && retryCount < 5) {
+          retryCount++;
+          setTimeout(speak, 100);
+          return;
+        }
+        
+        // Try to find a female/lady Kannada voice first (Microsoft Kalpana, Google, Lekha)
+        let knVoice = voiceList.find(v => 
+          (v.lang.startsWith('kn') || v.lang.includes('kannada')) && 
+          (v.name.toLowerCase().includes('kalpana') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('lekha'))
+        );
+        
+        // Fallback to any Kannada voice
+        if (!knVoice) {
+          knVoice = voiceList.find(v => v.lang.startsWith('kn') || v.lang.includes('kannada'));
+        }
+        
+        let textToSpeak = text;
+        let lang = 'kn-IN';
+        let targetVoice = knVoice;
+        
+        if (!knVoice) {
+          // Fallback to phonetic spelling if Kannada pack is missing on the client device
+          const allVocab = LEVELS.flatMap(l => l.vocab);
+          const matchItem = allVocab.find(item => item.kannada === text);
+          if (matchItem) {
+            // Strip macrons and diacritics (e.g. ō -> o, ē -> e, ā -> a) so the English voice reads it smoothly
+            textToSpeak = matchItem.phonetic.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\?/g, "");
+            lang = 'en-US';
+            
+            // Look for a female English voice (e.g. Zira, Hazel, Samantha, Google female)
+            const engFemaleVoice = voiceList.find(v => 
+              v.lang.startsWith('en') && 
+              (v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('hazel'))
+            );
+            if (engFemaleVoice) {
+              targetVoice = engFemaleVoice;
+            }
+          }
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = lang;
+        if (targetVoice) {
+          utterance.voice = targetVoice;
+        }
+        utterance.rate = 0.68; // Slower rate (0.68) for smooth and clear language learning
+        window.speechSynthesis.speak(utterance);
+      };
+
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        // Give 50ms to allow Chrome to release and clear the speech channel
+        setTimeout(speak, 50);
+      } else {
+        speak();
       }
-      utterance.rate = 0.82; // Slightly slower for language learners
-      window.speechSynthesis.speak(utterance);
     } catch (err) {
       console.error('Speech engine error:', err);
     }
@@ -276,12 +405,14 @@ export default function GamesPage() {
     return () => cancelAnimationFrame(animId);
   };
 
-  // Start a Vocab Match level
-  const initLevel = (levelId: number) => {
+  // ==========================================
+  // GAME 1: VOCAB MATCH LOGIC
+  // ==========================================
+  const initVocabMatch = (levelId: number) => {
+    unlockAudio();
     const level = LEVELS.find(l => l.id === levelId);
     if (!level) return;
 
-    // Build card list from vocabulary items
     const cardList: Card[] = [];
     level.vocab.forEach((v) => {
       cardList.push({
@@ -299,7 +430,6 @@ export default function GamesPage() {
       });
     });
 
-    // Shuffle the 8 cards
     const shuffled = [...cardList].sort(() => Math.random() - 0.5);
 
     setCards(shuffled);
@@ -311,9 +441,7 @@ export default function GamesPage() {
     setCurrentLevelId(levelId);
   };
 
-  // Game Board Click Handler
-  const handleCardClick = (idx: number) => {
-    // Prevent clicking matched or already flipped cards or if 2 cards are currently flipped
+  const handleVocabCardClick = (idx: number) => {
     if (
       flippedIndices.includes(idx) || 
       matchedCardIds.includes(cards[idx].id) ||
@@ -323,7 +451,6 @@ export default function GamesPage() {
     playSynthSound('click');
     const card = cards[idx];
     
-    // Pronounce word when flipping Kannada card
     if (card.type === 'kannada') {
       speakKannadaWord(card.text);
     }
@@ -331,30 +458,26 @@ export default function GamesPage() {
     const nextFlipped = [...flippedIndices, idx];
     setFlippedIndices(nextFlipped);
 
-    // If this is the second card flipped, verify the match
     if (nextFlipped.length === 2) {
       setTurns(prev => prev + 1);
       const firstCard = cards[nextFlipped[0]];
       const secondCard = cards[nextFlipped[1]];
 
       if (firstCard.matchId === secondCard.matchId && firstCard.type !== secondCard.type) {
-        // MATCH FOUND
         setTimeout(() => {
           playSynthSound('match');
           const newlyMatched = [firstCard.id, secondCard.id];
           setMatchedCardIds(prev => {
             const next = [...prev, ...newlyMatched];
             
-            // Check if level is fully completed
             if (next.length === cards.length) {
               setGameState('complete');
               playSynthSound('victory');
               setTimeout(startConfettiRain, 150);
 
-              // Update High Score if more efficient (fewer turns) or first try
               setHighScores(prevScores => {
                 const currentBest = prevScores[currentLevelId];
-                const newTurns = turns + 1; // current turns count plus this final match
+                const newTurns = turns + 1;
                 if (!currentBest || newTurns < currentBest) {
                   const updated = { ...prevScores, [currentLevelId]: newTurns };
                   localStorage.setItem('kannada_games_high_scores', JSON.stringify(updated));
@@ -368,7 +491,6 @@ export default function GamesPage() {
           setFlippedIndices([]);
         }, 350);
       } else {
-        // MISMATCH
         setTimeout(() => {
           playSynthSound('mismatch');
           setFlippedIndices([]);
@@ -377,14 +499,110 @@ export default function GamesPage() {
     }
   };
 
-  // Star Rating calculator based on flips
+  // ==========================================
+  // GAME 2: SOUND QUEST LOGIC
+  // ==========================================
+  const initSoundQuest = (levelId: number) => {
+    unlockAudio();
+    const level = LEVELS.find(l => l.id === levelId);
+    if (!level) return;
+
+    const generatedQuestions: Question[] = [];
+    // Generate 8 random vocabulary listening questions
+    for (let i = 0; i < 8; i++) {
+      const correctItem = level.vocab[Math.floor(Math.random() * level.vocab.length)];
+      // Shuffled English options (the 4 translations of the level items)
+      const options = level.vocab.map(v => v.english).sort(() => Math.random() - 0.5);
+
+      generatedQuestions.push({
+        correctItem,
+        options
+      });
+    }
+
+    setSqQuestions(generatedQuestions);
+    setSqCurrentIdx(0);
+    setSqLives(3);
+    setSqStreak(0);
+    setSqScore(0);
+    setSqSelectedOption(null);
+    setSqAnswered(false);
+    setTimeSpent(0);
+    setGameState('playing');
+    setCurrentLevelId(levelId);
+
+    // Speak first audio prompt
+    setTimeout(() => {
+      speakKannadaWord(generatedQuestions[0].correctItem.kannada);
+    }, 400);
+  };
+
+  const handleSoundQuestAnswer = (option: string) => {
+    if (sqAnswered) return;
+
+    setSqSelectedOption(option);
+    setSqAnswered(true);
+
+    const currentCorrect = sqQuestions[sqCurrentIdx].correctItem.english;
+    const isCorrect = option === currentCorrect;
+
+    if (isCorrect) {
+      playSynthSound('match');
+      setSqScore(prev => prev + 10 + (sqStreak >= 2 ? 5 : 0));
+      setSqStreak(prev => prev + 1);
+    } else {
+      playSynthSound('mismatch');
+      setSqLives(prev => prev - 1);
+      setSqStreak(0);
+    }
+
+    // Delay before moving to the next question or ending game
+    setTimeout(() => {
+      if (sqLives - (isCorrect ? 0 : 1) === 0) {
+        // GAME OVER
+        setGameState('complete');
+        // Synthesizer plays low buzzer
+        playSynthSound('mismatch');
+      } else if (sqCurrentIdx === 7) {
+        // VICTORY (8 questions cleared)
+        setGameState('complete');
+        playSynthSound('victory');
+        setTimeout(startConfettiRain, 150);
+
+        setSqHighScores(prevScores => {
+          const currentBest = prevScores[currentLevelId];
+          const newScore = sqScore + (isCorrect ? 10 + (sqStreak >= 2 ? 5 : 0) : 0);
+          if (!currentBest || newScore > currentBest) {
+            const updated = { ...prevScores, [currentLevelId]: newScore };
+            localStorage.setItem('kannada_games_sq_high_scores', JSON.stringify(updated));
+            return updated;
+          }
+          return prevScores;
+        });
+      } else {
+        // NEXT QUESTION
+        const nextIdx = sqCurrentIdx + 1;
+        setSqCurrentIdx(nextIdx);
+        setSqSelectedOption(null);
+        setSqAnswered(false);
+        speakKannadaWord(sqQuestions[nextIdx].correctItem.kannada);
+      }
+    }, 1600);
+  };
+
+  // Shared Helper calculations
   const calculateStars = (flips: number) => {
     if (flips <= 5) return 3;
     if (flips <= 8) return 2;
     return 1;
   };
 
-  // Format seconds to MM:SS
+  const calculateStarsSq = (score: number) => {
+    if (score >= 80) return 3;
+    if (score >= 60) return 2;
+    return 1;
+  };
+
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, '0');
     const s = (secs % 60).toString().padStart(2, '0');
@@ -393,40 +611,44 @@ export default function GamesPage() {
 
   return (
     <>
-      {/* Confetti Overlay Canvas */}
       <canvas id="confetti-canvas" className="fixed inset-0 pointer-events-none z-50 w-full h-full" />
 
-      {/* PERSPECTIVE CARD FLIPPING INLINE CSS STYLES */}
+      {/* Perspective Flip inline classes */}
       <style>{`
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-style-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
       `}</style>
 
       <div className="min-h-screen pt-28 pb-16 relative z-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col justify-between">
         
         {/* HEADER TOOLBAR */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white/40 dark:bg-[#16112a]/30 border border-gray-200/50 dark:border-white/5 p-4 rounded-3xl backdrop-blur-md">
-          <Link
-            href={`/${locale}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {tCommon('backToHome')}
-          </Link>
+          {gameMode === 'select' ? (
+            <Link
+              href={`/${locale}`}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {tCommon('backToHome')}
+            </Link>
+          ) : (
+            <button
+              onClick={() => {
+                setGameMode('select');
+                setGameState('idle');
+              }}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t('select_game') || 'Select Game'}
+            </button>
+          )}
           
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400 bg-clip-text text-transparent flex items-center gap-1.5 font-kannada">
             <Sparkles className="h-5 w-5 text-primary-500 animate-pulse" />
-            {t('title')}
+            {gameMode === 'sound' ? t('sound_quest_title') : (gameMode === 'vocab' ? t('game1_title') : t('title'))}
           </h1>
 
           <div className="flex items-center gap-2">
@@ -455,40 +677,110 @@ export default function GamesPage() {
           </div>
         </div>
 
-        {/* ACTIVE GAME WINDOW CONTAINER */}
+        {/* ACTIVE CONTENT VIEW */}
         <div className="flex-grow flex items-center justify-center">
           <div className="w-full">
             <AnimatePresence mode="wait">
-              
-              {/* IDLE / WELCOME SCREEN */}
-              {gameState === 'idle' && (
+
+              {/* GAME SELECTION MENU (SELECT MODE) */}
+              {gameMode === 'select' && (
                 <motion.div
-                  key="idle"
+                  key="select"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
+                  className="w-full text-center py-6"
+                >
+                  <div className="max-w-3xl mx-auto">
+                    <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">{t('title')}</h2>
+                    <p className="text-base text-gray-500 dark:text-gray-400 mb-10 max-w-lg mx-auto">
+                      {t('subtitle')}
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 text-left">
+                      {/* Game 1: Vocab Match */}
+                      <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
+                        <div>
+                          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6">
+                            <BookOpen className="h-6 w-6" />
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('game1_title')}</h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                            {t('game1_desc')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            unlockAudio();
+                            setGameMode('vocab');
+                            setGameState('idle');
+                          }}
+                          className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
+                        >
+                          {t('play_now') || 'Play Now'}
+                          <Play className="h-4 w-4 fill-current" />
+                        </button>
+                      </GlassCard>
+
+                      {/* Game 2: Sound Quest */}
+                      <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
+                        <div>
+                          <div className="w-12 h-12 rounded-2xl bg-pink-500/10 dark:bg-pink-500/20 text-pink-600 dark:text-pink-400 flex items-center justify-center mb-6">
+                            <Volume1 className="h-6 w-6" />
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('sound_quest_title')}</h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                            {t('sound_quest_desc')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            unlockAudio();
+                            setGameMode('sound');
+                            setGameState('idle');
+                          }}
+                          className="w-full py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
+                        >
+                          {t('play_now') || 'Play Now'}
+                          <Play className="h-4 w-4 fill-current" />
+                        </button>
+                      </GlassCard>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ======================================= */}
+              {/* GAME MODE 1: VOCAB MATCH BOARD          */}
+              {/* ======================================= */}
+              {gameMode === 'vocab' && gameState === 'idle' && (
+                <motion.div
+                  key="vocab-idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
                   className="w-full text-center py-10"
                 >
-                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl">
-                    <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-6">
-                      <Trophy className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                    <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center mx-auto mb-6 text-blue-600 dark:text-blue-400">
+                      <Trophy className="h-7 w-7" />
                     </div>
-                    <h2 className="text-3xl font-extrabold mb-4 text-gray-900 dark:text-white">{t('game1_title')}</h2>
-                    <p className="text-base text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('game1_title')}</h2>
+                    <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
                       {t('game1_desc')}
                     </p>
 
-                    <h3 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-4">
                       {t('select_level')}
                     </h3>
                     
-                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto mb-8">
+                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
                       {LEVELS.map(level => {
                         const best = highScores[level.id];
                         return (
                           <button
                             key={level.id}
-                            onClick={() => initLevel(level.id)}
+                            onClick={() => initVocabMatch(level.id)}
                             className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] hover:border-primary-400 dark:hover:border-primary-850 hover:shadow-md transition-all text-left group"
                           >
                             <div>
@@ -517,10 +809,9 @@ export default function GamesPage() {
                 </motion.div>
               )}
 
-              {/* GAMEPLAY SCREEN */}
-              {gameState === 'playing' && (
+              {gameMode === 'vocab' && gameState === 'playing' && (
                 <motion.div
-                  key="playing"
+                  key="vocab-playing"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -545,12 +836,10 @@ export default function GamesPage() {
                     </div>
                   </div>
 
-                  {/* Level Title banner */}
                   <div className={`p-4 rounded-2xl border text-center bg-gradient-to-r ${LEVELS[currentLevelId - 1].colorClass}`}>
                     <h3 className="font-bold text-base">{t(LEVELS[currentLevelId - 1].titleKey)}</h3>
                   </div>
 
-                  {/* Card Matrix Grid */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto w-full">
                     {cards.map((card, idx) => {
                       const isFlipped = flippedIndices.includes(idx);
@@ -560,7 +849,7 @@ export default function GamesPage() {
                         <div 
                           key={card.id} 
                           className="w-full aspect-[4/3] sm:aspect-square relative perspective-1000 cursor-pointer"
-                          onClick={() => handleCardClick(idx)}
+                          onClick={() => handleVocabCardClick(idx)}
                         >
                           <div
                             className="w-full h-full transition-transform duration-500 transform-style-3d relative"
@@ -568,7 +857,7 @@ export default function GamesPage() {
                               transform: isFlipped || isMatched ? 'rotateY(180deg)' : 'rotateY(0deg)',
                             }}
                           >
-                            {/* Unflipped Face (Front) */}
+                            {/* Front */}
                             <div className="absolute inset-0 backface-hidden rounded-2xl border border-gray-200/60 dark:border-white/5 bg-white/70 dark:bg-[#16112a]/70 backdrop-blur-md flex flex-col items-center justify-center shadow-sm hover:shadow-md hover:border-primary-400 dark:hover:border-primary-800 transition-all">
                               <div className="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-1">
                                 <HelpCircle className="h-5 w-5 text-primary-500" />
@@ -576,7 +865,7 @@ export default function GamesPage() {
                               <span className="text-[11px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">ಕನ್ನಡ</span>
                             </div>
 
-                            {/* Flipped Face (Back) */}
+                            {/* Back */}
                             <div
                               className={`absolute inset-0 backface-hidden rounded-2xl flex flex-col items-center justify-center p-4 text-center shadow-inner rotate-y-180 border ${
                                 card.type === 'english'
@@ -609,24 +898,21 @@ export default function GamesPage() {
                     })}
                   </div>
 
-                  {/* Audio helper notice */}
                   <p className="text-xs text-center text-gray-400 dark:text-gray-500 mt-2">
                     {t('pronounce_help')}
                   </p>
                 </motion.div>
               )}
 
-              {/* LEVEL COMPLETE VICTORY SCREEN */}
-              {gameState === 'complete' && (
+              {gameMode === 'vocab' && gameState === 'complete' && (
                 <motion.div
-                  key="complete"
+                  key="vocab-complete"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="w-full py-6 text-center"
                 >
-                  <GlassCard className="p-8 sm:p-12 max-w-xl mx-auto shadow-2xl relative overflow-hidden">
-                    {/* Background glow */}
+                  <GlassCard className="p-8 sm:p-12 max-w-xl mx-auto shadow-2xl relative overflow-hidden border border-primary-200/40">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary-400/20 dark:bg-primary-900/10 rounded-full blur-[80px] -z-10" />
 
                     <div className="flex justify-center gap-1 mb-6">
@@ -648,12 +934,11 @@ export default function GamesPage() {
                       ))}
                     </div>
 
-                    <h2 className="text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('victory')}</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('victory')}</h2>
+                    <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto">
                       {t('victory_desc')}
                     </p>
 
-                    {/* Stats display */}
                     <div className="grid grid-cols-3 gap-3 max-w-md mx-auto mb-8 bg-white/50 dark:bg-[#16112a]/30 border border-gray-100 dark:border-white/5 p-4 rounded-2xl">
                       <div>
                         <div className="text-xs text-gray-400 dark:text-gray-500">{t('turns')}</div>
@@ -673,7 +958,7 @@ export default function GamesPage() {
 
                     <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
                       <button
-                        onClick={() => initLevel(currentLevelId)}
+                        onClick={() => initVocabMatch(currentLevelId)}
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-750 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 rounded-full font-bold transition-all text-sm"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -682,7 +967,7 @@ export default function GamesPage() {
 
                       {currentLevelId < LEVELS.length ? (
                         <button
-                          onClick={() => initLevel(currentLevelId + 1)}
+                          onClick={() => initVocabMatch(currentLevelId + 1)}
                           className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full font-bold shadow-md shadow-primary-600/20 hover:shadow-lg transition-all text-sm"
                         >
                           {t('next_level')}
@@ -702,12 +987,280 @@ export default function GamesPage() {
                 </motion.div>
               )}
 
+              {/* ======================================= */}
+              {/* GAME MODE 2: SOUND QUEST BOARD          */}
+              {/* ======================================= */}
+              {gameMode === 'sound' && gameState === 'idle' && (
+                <motion.div
+                  key="sound-idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full text-center py-10"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                    <div className="w-14 h-14 rounded-full bg-pink-50 dark:bg-pink-950/40 flex items-center justify-center mx-auto mb-6 text-pink-600 dark:text-pink-400">
+                      <Volume1 className="h-7 w-7" />
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('sound_quest_title')}</h2>
+                    <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+                      {t('sound_quest_desc')}
+                    </p>
+
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-4">
+                      {t('select_level')}
+                    </h3>
+                    
+                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                      {LEVELS.map(level => {
+                        const best = sqHighScores[level.id];
+                        return (
+                          <button
+                            key={level.id}
+                            onClick={() => initSoundQuest(level.id)}
+                            className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] hover:border-pink-400 dark:hover:border-pink-900 hover:shadow-md transition-all text-left group"
+                          >
+                            <div>
+                              <div className="font-bold text-gray-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
+                                {t(level.titleKey)}
+                              </div>
+                              <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                8 Questions • Audio Quiz
+                              </div>
+                            </div>
+                            {best ? (
+                              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-pink-50 dark:bg-pink-950/30 border border-pink-100 dark:border-pink-900/30 text-pink-700 dark:text-pink-400 font-bold text-xs">
+                                <Trophy className="h-3 w-3" />
+                                {best} pts
+                              </div>
+                            ) : (
+                              <div className="p-2 rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+                                <Play className="h-4 w-4 fill-current" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {gameMode === 'sound' && gameState === 'playing' && sqQuestions.length > 0 && (
+                <motion.div
+                  key="sound-playing"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full flex flex-col gap-6 max-w-2xl mx-auto"
+                >
+                  {/* Status Bar */}
+                  <div className="flex items-center justify-between text-sm px-2 font-semibold text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-[#16112a]/30 p-3 rounded-2xl border border-gray-200/50 dark:border-white/5 shadow-sm">
+                    <span className="text-gray-450 dark:text-gray-500">
+                      {t('question') || 'Question'} {sqCurrentIdx + 1}/8
+                    </span>
+                    
+                    {/* Lives representation (Lucide Hearts) */}
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1.5" title={`${sqLives} Lives Remaining`}>
+                        {[...Array(3)].map((_, i) => (
+                          <Heart 
+                            key={i} 
+                            className={`h-5 w-5 ${
+                              i < sqLives 
+                                ? 'text-red-500 fill-red-500 filter drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]' 
+                                : 'text-gray-300 dark:text-gray-700'
+                            }`} 
+                          />
+                        ))}
+                      </div>
+
+                      {sqStreak >= 2 && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-bold animate-bounce">
+                          🔥 {sqStreak} {t('streak')}
+                        </span>
+                      )}
+
+                      <span className="font-extrabold text-primary-600 dark:text-primary-400">
+                        {t('score')}: {sqScore}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Audio Speaker Box */}
+                  <GlassCard className="p-8 text-center flex flex-col items-center justify-center border border-pink-200/30 dark:border-pink-950/20 shadow-md">
+                    <button
+                      onClick={() => speakKannadaWord(sqQuestions[sqCurrentIdx].correctItem.kannada)}
+                      className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl active:scale-95 transition-all mb-4 group"
+                      title="Replay Audio"
+                    >
+                      <Volume2 className="h-9 w-9 group-hover:scale-110 transition-transform" />
+                    </button>
+                    <span className="text-xs font-bold text-pink-600 dark:text-pink-400 uppercase tracking-wider mb-1">
+                      {t('replay_audio')}
+                    </span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      Listen carefully to the Kannada word spoken above. What is its English meaning?
+                    </p>
+
+                    {/* Hint (Phonetic spelling) */}
+                    <div className="mt-4 px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200/60 dark:border-white/5 text-xs text-gray-450 dark:text-gray-450 italic">
+                      Pronunciation hint: "{sqQuestions[sqCurrentIdx].correctItem.phonetic}"
+                    </div>
+                  </GlassCard>
+
+                  {/* Multiple Choice Grid */}
+                  <div className="grid sm:grid-cols-2 gap-3 w-full">
+                    {sqQuestions[sqCurrentIdx].options.map((option) => {
+                      const isSelected = sqSelectedOption === option;
+                      const isCorrect = option === sqQuestions[sqCurrentIdx].correctItem.english;
+                      
+                      let btnClass = "bg-white dark:bg-[#16112a] border-gray-200 dark:border-[#2a2440] hover:border-pink-300 dark:hover:border-pink-900 hover:shadow-sm";
+                      if (sqAnswered) {
+                        if (isCorrect) {
+                          btnClass = "bg-green-500/10 border-green-500 text-green-700 dark:text-green-400 shadow-sm shadow-green-500/10";
+                        } else if (isSelected) {
+                          btnClass = "bg-red-500/10 border-red-500 text-red-700 dark:text-red-400 shadow-sm shadow-red-500/10";
+                        } else {
+                          btnClass = "opacity-60 bg-gray-50 dark:bg-[#16112a]/50 border-gray-250 dark:border-[#2a2440]/50 cursor-not-allowed";
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={option}
+                          disabled={sqAnswered}
+                          onClick={() => handleSoundQuestAnswer(option)}
+                          className={`p-4 rounded-2xl border text-left font-bold text-sm sm:text-base transition-all flex items-center justify-between group ${btnClass}`}
+                        >
+                          <span>{option}</span>
+                          
+                          {sqAnswered && isCorrect && (
+                            <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+                              <Check className="h-3 w-3 text-white" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Feedback Banner */}
+                  <div className="h-10 text-center text-sm font-bold">
+                    <AnimatePresence>
+                      {sqAnswered && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          className={sqSelectedOption === sqQuestions[sqCurrentIdx].correctItem.english ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}
+                        >
+                          {sqSelectedOption === sqQuestions[sqCurrentIdx].correctItem.english 
+                            ? `🎉 ${t('correct') || 'Correct!'}` 
+                            : `😢 ${t('incorrect') || 'Incorrect!'} (${sqQuestions[sqCurrentIdx].correctItem.english})`
+                          }
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              )}
+
+              {gameMode === 'sound' && gameState === 'complete' && (
+                <motion.div
+                  key="sound-complete"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full py-6 text-center"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-xl mx-auto shadow-2xl relative overflow-hidden border border-pink-200/30">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-pink-400/20 dark:bg-pink-900/10 rounded-full blur-[80px] -z-10" />
+
+                    {sqLives === 0 ? (
+                      // GAME OVER SCREEN
+                      <>
+                        <div className="w-14 h-14 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-6 text-red-500">
+                          <Heart className="h-7 w-7" />
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('game_over') || 'Game Over!'}
+                        </h2>
+                        <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          {t('game_over_desc')}
+                        </p>
+                      </>
+                    ) : (
+                      // VICTORY SCREEN
+                      <>
+                        <div className="flex justify-center gap-1 mb-6">
+                          {[...Array(3)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ scale: 0, rotate: -20 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ delay: i * 0.15, type: 'spring', stiffness: 200 }}
+                            >
+                              <Star 
+                                className={`h-10 w-10 ${
+                                  i < calculateStarsSq(sqScore) 
+                                    ? 'text-amber-400 fill-amber-400 filter drop-shadow-md' 
+                                    : 'text-gray-300 dark:text-gray-700'
+                                }`} 
+                              />
+                            </motion.div>
+                          ))}
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('victory_sound_quest') || 'Victory!'}
+                        </h2>
+                        <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          {t('victory_sound_quest_desc')}
+                        </p>
+                      </>
+                    )}
+
+                    {/* Stats display */}
+                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-8 bg-white/50 dark:bg-[#16112a]/30 border border-gray-100 dark:border-white/5 p-4 rounded-2xl">
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{t('score')}</div>
+                        <div className="text-xl font-extrabold text-pink-600 dark:text-pink-400 mt-1">{sqScore}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{t('high_score')}</div>
+                        <div className="text-xl font-extrabold text-pink-600 dark:text-pink-400 mt-1">
+                          {Math.max(sqHighScores[currentLevelId] || 0, sqScore)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                      <button
+                        onClick={() => initSoundQuest(currentLevelId)}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-750 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 rounded-full font-bold transition-all text-sm"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        Play Again
+                      </button>
+
+                      <button
+                        onClick={() => setGameState('idle')}
+                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-pink-650 hover:bg-pink-700 text-white rounded-full font-bold shadow-md shadow-pink-600/20 hover:shadow-lg transition-all text-sm bg-pink-600"
+                      >
+                        Back to Levels
+                        <Trophy className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
             </AnimatePresence>
           </div>
         </div>
 
-        {/* STUDY BOARD & SOUNDBOARD CHEAT SHEET */}
-        {gameState !== 'complete' && (
+        {/* CHEAT SHEET REFERENCE TABLE */}
+        {gameMode !== 'select' && gameState !== 'complete' && (
           <div className="mt-12 bg-white/40 dark:bg-[#16112a]/30 border border-gray-200/50 dark:border-white/5 p-6 rounded-3xl backdrop-blur-md max-w-4xl mx-auto w-full">
             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <BookOpen className="h-4.5 w-4.5 text-primary-500" />

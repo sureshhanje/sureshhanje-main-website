@@ -346,6 +346,20 @@
     "next_level": "Next Level",
     "select_level": "Select Level to Start:",
     "pronounce_help": "Click matched cards to hear pronunciation",
-    "high_score": "High Score"
+    "high_score": "High Score",
+    "sound_quest_title": "Sound Quest",
+    "sound_quest_desc": "Listen to the Kannada word and select the correct English meaning. Test your listening skills!",
+    "lives": "Lives",
+    "game_over": "Game Over!",
+    "game_over_desc": "You ran out of lives. Try again to improve your score!",
+    "victory_sound_quest": "Victory!",
+    "victory_sound_quest_desc": "Superb! You correctly identified all words!",
+    "replay_audio": "Replay Sound",
+    "question": "Question",
+    "streak": "Streak",
+    "select_game": "Select Game Mode",
+    "play_now": "Play Now",
+    "correct": "Correct!",
+    "incorrect": "Incorrect!"
   }
 }
