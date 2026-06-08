@@ -381,6 +381,15 @@
     "check_answer": "Check Answer",
     "clear": "Reset Slots",
     "word_builder_title": "Word Builder",
-    "word_builder_desc": "Reorder the blocks to spell the Kannada word correctly."
+    "word_builder_desc": "Reorder the blocks to spell the Kannada word correctly.",
+    "game4_title": "Speedy Review",
+    "game4_desc": "Test your recall under time pressure! Quick-fire True/False matching.",
+    "speedy_review_title": "Speedy Review",
+    "speedy_review_desc": "Quickly decide if the Kannada word matches the English translation before time runs out!",
+    "true_btn": "True",
+    "false_btn": "False",
+    "time_left": "Time Left",
+    "victory_speedy_review": "Time Up!",
+    "victory_speedy_review_desc": "Fantastic speed run! Let's check your final score."
   }
 }

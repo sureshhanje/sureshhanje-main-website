@@ -701,8 +701,8 @@ export default function GamesPage() {
   const tCommon = useTranslations('common');
   const locale = useLocale();
   
-  // Game Selector Mode: 'select' (game menu), 'vocab' (vocab match), 'sound' (sound quest), 'wordbuilder' (word builder)
-  const [gameMode, setGameMode] = useState<'select' | 'vocab' | 'sound' | 'wordbuilder'>('select');
+  // Game Selector Mode: 'select' (game menu), 'vocab' (vocab match), 'sound' (sound quest), 'wordbuilder' (word builder), 'speedy' (speedy review)
+  const [gameMode, setGameMode] = useState<'select' | 'vocab' | 'sound' | 'wordbuilder' | 'speedy'>('select');
 
   // Game States (Shared)
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'complete'>('idle');
@@ -712,6 +712,20 @@ export default function GamesPage() {
   const [highScores, setHighScores] = useState<Record<number, number>>({}); // Vocab Match (best turns)
   const [sqHighScores, setSqHighScores] = useState<Record<number, number>>({}); // Sound Quest (best score)
   const [wbHighScores, setWbHighScores] = useState<Record<number, number>>({}); // Word Builder (best score)
+  const [speedyHighScores, setSpeedyHighScores] = useState<Record<number, number>>({}); // Speedy Review (best score)
+
+  // Speedy Review specific states
+  const [speedyTimeRemaining, setSpeedyTimeRemaining] = useState(45);
+  const [speedyScore, setSpeedyScore] = useState(0);
+  const [speedyLives, setSpeedyLives] = useState(3);
+  const [speedyStreak, setSpeedyStreak] = useState(0);
+  const [speedyActiveQuestion, setSpeedyActiveQuestion] = useState<{
+    correctItem: VocabItem;
+    displayEnglish: string;
+    isCorrectMatch: boolean;
+  } | null>(null);
+  const [speedyAnswered, setSpeedyAnswered] = useState(false);
+  const [speedyFeedback, setSpeedyFeedback] = useState<'correct' | 'incorrect' | null>(null);
   
   // Settings (Shared)
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -776,6 +790,15 @@ export default function GamesPage() {
         }
       }
 
+      const savedSpeedy = localStorage.getItem('kannada_games_speedy_high_scores');
+      if (savedSpeedy) {
+        try {
+          setSpeedyHighScores(JSON.parse(savedSpeedy));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
       if (window.speechSynthesis) {
         const updateVoices = () => {
           setVoices(window.speechSynthesis.getVoices());
@@ -798,6 +821,44 @@ export default function GamesPage() {
     }
     return () => clearInterval(timerId);
   }, [gameState]);
+
+  const speedyScoreRef = useRef(speedyScore);
+  speedyScoreRef.current = speedyScore;
+  const currentLevelIdRef = useRef(currentLevelId);
+  currentLevelIdRef.current = currentLevelId;
+
+  // Speedy Review Countdown Timer Effect
+  useEffect(() => {
+    let countdownId: any;
+    if (gameMode === 'speedy' && gameState === 'playing') {
+      countdownId = setInterval(() => {
+        setSpeedyTimeRemaining(prev => {
+          if (prev <= 1) {
+            clearInterval(countdownId);
+            setGameState('complete');
+            playSynthSound('victory');
+            setTimeout(startConfettiRain, 150);
+
+            // Save high score
+            setSpeedyHighScores(prevScores => {
+              const score = speedyScoreRef.current;
+              const levelId = currentLevelIdRef.current;
+              const currentBest = prevScores[levelId] || 0;
+              if (score > currentBest) {
+                const updated = { ...prevScores, [levelId]: score };
+                localStorage.setItem('kannada_games_speedy_high_scores', JSON.stringify(updated));
+                return updated;
+              }
+              return prevScores;
+            });
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(countdownId);
+  }, [gameMode, gameState]);
 
   // Unlock audio helper to run on click events
   const unlockAudio = () => {
@@ -1373,6 +1434,95 @@ export default function GamesPage() {
     }
   };
 
+  // ==========================================
+  // GAME 4: SPEEDY REVIEW LOGIC
+  // ==========================================
+  const initSpeedyReview = (levelId: number) => {
+    unlockAudio();
+    setSpeedyScore(0);
+    setSpeedyLives(3);
+    setSpeedyStreak(0);
+    setSpeedyTimeRemaining(45);
+    setSpeedyAnswered(false);
+    setSpeedyFeedback(null);
+    setCurrentLevelId(levelId);
+    setGameState('playing');
+    
+    generateSpeedyQuestion(levelId);
+  };
+
+  const generateSpeedyQuestion = (levelId: number) => {
+    const level = LEVELS.find(l => l.id === levelId);
+    if (!level) return;
+
+    // Pick a random target item
+    const correctItem = level.vocab[Math.floor(Math.random() * level.vocab.length)];
+    const isCorrectMatch = Math.random() < 0.5;
+    
+    let displayEnglish = correctItem.english;
+    if (!isCorrectMatch) {
+      // Pick a different English translation from this level
+      const otherItems = level.vocab.filter(v => v.id !== correctItem.id);
+      displayEnglish = otherItems[Math.floor(Math.random() * otherItems.length)].english;
+    }
+
+    setSpeedyActiveQuestion({
+      correctItem,
+      displayEnglish,
+      isCorrectMatch
+    });
+    setSpeedyAnswered(false);
+    setSpeedyFeedback(null);
+
+    // Speak the Kannada word to aid learning
+    setTimeout(() => {
+      speakKannadaWord(correctItem.kannada);
+    }, 50);
+  };
+
+  const handleSpeedyAnswer = (userSelectedTrue: boolean) => {
+    if (speedyAnswered || !speedyActiveQuestion) return;
+
+    setSpeedyAnswered(true);
+    const { isCorrectMatch } = speedyActiveQuestion;
+    const isCorrect = userSelectedTrue === isCorrectMatch;
+
+    if (isCorrect) {
+      playSynthSound('match');
+      setSpeedyFeedback('correct');
+      setSpeedyScore(prev => prev + 10 + (speedyStreak >= 2 ? 5 : 0));
+      setSpeedyStreak(prev => prev + 1);
+    } else {
+      playSynthSound('mismatch');
+      setSpeedyFeedback('incorrect');
+      setSpeedyLives(prev => prev - 1);
+      setSpeedyStreak(0);
+    }
+
+    // Fast transition delay (280ms) for high-speed review matching!
+    setTimeout(() => {
+      if (speedyLives - (isCorrect ? 0 : 1) === 0) {
+        // Lives run out -> Game Over
+        setGameState('complete');
+        playSynthSound('mismatch');
+        
+        // Save score if it's the best
+        setSpeedyHighScores(prevScores => {
+          const currentBest = prevScores[currentLevelId] || 0;
+          const newScore = speedyScore + (isCorrect ? 10 + (speedyStreak >= 2 ? 5 : 0) : 0);
+          if (newScore > currentBest) {
+            const updated = { ...prevScores, [currentLevelId]: newScore };
+            localStorage.setItem('kannada_games_speedy_high_scores', JSON.stringify(updated));
+            return updated;
+          }
+          return prevScores;
+        });
+      } else {
+        generateSpeedyQuestion(currentLevelId);
+      }
+    }, 280);
+  };
+
   // Shared Helper calculations
   const calculateStars = (flips: number) => {
     if (flips <= 5) return 3;
@@ -1480,7 +1630,7 @@ export default function GamesPage() {
                       {t('subtitle')}
                     </p>
 
-                    <div className="grid md:grid-cols-3 gap-6 text-left">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
                       {/* Game 1: Vocab Match */}
                       <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
                         <div>
@@ -1547,6 +1697,30 @@ export default function GamesPage() {
                             setGameState('idle');
                           }}
                           className="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
+                        >
+                          {t('play_now') || 'Play Now'}
+                          <Play className="h-4 w-4 fill-current" />
+                        </button>
+                      </GlassCard>
+
+                      {/* Game 4: Speedy Review */}
+                      <GlassCard className="p-6 sm:p-8 hover-lift flex flex-col justify-between h-full border border-primary-200/40 dark:border-[#2a2440]">
+                        <div>
+                          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-6">
+                            <Timer className="h-6 w-6" />
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('game4_title')}</h3>
+                          <p className="text-sm text-gray-555 dark:text-gray-400 leading-relaxed mb-6">
+                            {t('game4_desc')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            unlockAudio();
+                            setGameMode('speedy');
+                            setGameState('idle');
+                          }}
+                          className="w-full py-3 bg-gradient-to-r from-purple-650 to-indigo-650 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600"
                         >
                           {t('play_now') || 'Play Now'}
                           <Play className="h-4 w-4 fill-current" />
@@ -2456,6 +2630,299 @@ export default function GamesPage() {
                         <button
                           onClick={() => setGameState('idle')}
                           className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-md shadow-amber-600/20 hover:shadow-lg transition-all text-sm"
+                        >
+                          Back to Levels
+                          <Trophy className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {/* ======================================= */}
+              {/* GAME MODE 4: SPEEDY REVIEW BOARD        */}
+              {/* ======================================= */}
+              {gameMode === 'speedy' && gameState === 'idle' && (
+                <motion.div
+                  key="speedy-idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full text-center py-10"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-4xl mx-auto shadow-xl border border-primary-200/40">
+                    <div className="w-14 h-14 rounded-full bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center mx-auto mb-6 text-purple-600 dark:text-purple-400">
+                      <Timer className="h-7 w-7 animate-pulse" />
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">{t('speedy_review_title')}</h2>
+                    <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+                      {t('speedy_review_desc')}
+                    </p>
+
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-555 uppercase tracking-wider mb-4">
+                      {t('select_level')}
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                      {LEVELS.map(level => {
+                        const best = speedyHighScores[level.id];
+                        return (
+                          <button
+                            key={level.id}
+                            onClick={() => initSpeedyReview(level.id)}
+                            className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-[#16112a] border border-gray-200 dark:border-[#2a2440] hover:border-purple-400 dark:hover:border-purple-900 hover:shadow-md transition-all text-left group"
+                          >
+                            <div>
+                              <div className="font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                                {t(level.titleKey)}
+                              </div>
+                              <div className="text-xs text-gray-400 dark:text-gray-550 mt-0.5">
+                                45s Time Rush • True/False
+                              </div>
+                            </div>
+                            {best ? (
+                              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/30 text-purple-700 dark:text-purple-400 font-bold text-xs">
+                                <Trophy className="h-3 w-3" />
+                                {best} pts
+                              </div>
+                            ) : (
+                              <div className="p-2 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                                <Play className="h-4 w-4 fill-current" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {gameMode === 'speedy' && gameState === 'playing' && speedyActiveQuestion && (
+                <motion.div
+                  key="speedy-playing"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full flex flex-col gap-6 max-w-2xl mx-auto relative"
+                >
+                  {/* Speedy Flash Overlay on Answer */}
+                  {speedyAnswered && speedyFeedback && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.12 }}
+                      exit={{ opacity: 0 }}
+                      className={`absolute inset-0 rounded-3xl pointer-events-none z-30 transition-colors ${
+                        speedyFeedback === 'correct' ? 'bg-green-500' : 'bg-red-500'
+                      }`}
+                    />
+                  )}
+
+                  {/* Status Bar */}
+                  <div className="flex items-center justify-between text-sm px-2 font-semibold text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-[#16112a]/30 p-3 rounded-2xl border border-gray-200/50 dark:border-white/5 shadow-sm">
+                    {/* Time Remaining with countdown color coding */}
+                    <div className="flex items-center gap-2">
+                      <Timer className={`h-5 w-5 ${speedyTimeRemaining <= 10 ? 'text-red-500 animate-pulse' : 'text-purple-500'}`} />
+                      <span className={`font-extrabold ${speedyTimeRemaining <= 10 ? 'text-red-500 font-black' : 'text-gray-800 dark:text-gray-200'}`}>
+                        {t('time_left') || 'Time Left'}: {speedyTimeRemaining}s
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      {/* Hearts for Lives */}
+                      <div className="flex items-center gap-1" title={`${speedyLives} Lives Remaining`}>
+                        {[...Array(3)].map((_, i) => (
+                          <Heart 
+                            key={i} 
+                            className={`h-5 w-5 ${
+                              i < speedyLives 
+                                ? 'text-red-500 fill-red-500 filter drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]' 
+                                : 'text-gray-300 dark:text-gray-700'
+                            }`} 
+                          />
+                        ))}
+                      </div>
+
+                      {speedyStreak >= 2 && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-bold animate-bounce">
+                          🔥 {speedyStreak}
+                        </span>
+                      )}
+
+                      <span className="font-extrabold text-purple-600 dark:text-purple-450">
+                        {t('score') || 'Score'}: {speedyScore}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Countdown Progress Bar */}
+                  <div className="w-full h-2 bg-gray-200 dark:bg-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      className={`h-full ${speedyTimeRemaining <= 10 ? 'bg-red-500' : 'bg-gradient-to-r from-purple-500 to-indigo-500'}`}
+                      initial={{ width: '100%' }}
+                      animate={{ width: `${(speedyTimeRemaining / 45) * 100}%` }}
+                      transition={{ duration: 1, ease: 'linear' }}
+                    />
+                  </div>
+
+                  {/* Speedy True/False Card */}
+                  <GlassCard className="p-8 text-center flex flex-col items-center justify-center border border-purple-200/30 dark:border-purple-950/20 shadow-md relative overflow-hidden">
+                    <h3 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-2">
+                      Vocabulary Speedy Run
+                    </h3>
+
+                    {/* Spoken word display */}
+                    <div className="mb-4 flex flex-col items-center gap-2">
+                      <span className="text-[10px] text-gray-400 dark:text-gray-550 uppercase tracking-wide">Spoken Kannada Word</span>
+                      <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white font-kannada">
+                        {speedyActiveQuestion.correctItem.kannada}
+                      </h2>
+                      <span className="text-xs text-purple-650 dark:text-purple-300 font-medium italic">
+                        "{speedyActiveQuestion.correctItem.phonetic}"
+                      </span>
+                    </div>
+
+                    <div className="w-full border-t border-gray-100 dark:border-white/5 my-4 pt-4 flex flex-col items-center gap-2">
+                      <span className="text-[10px] text-gray-400 dark:text-gray-555 uppercase tracking-wide">English Translation Match?</span>
+                      <h2 className="text-3xl font-extrabold text-primary-600 dark:text-primary-400">
+                        "{speedyActiveQuestion.displayEnglish}"
+                      </h2>
+                    </div>
+
+                    <button
+                      onClick={() => speakKannadaWord(speedyActiveQuestion.correctItem.kannada)}
+                      className="mt-2 p-2.5 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 hover:scale-105 active:scale-95 transition-all"
+                      title="Replay Pronunciation"
+                    >
+                      <Volume2 className="h-5 w-5" />
+                    </button>
+                  </GlassCard>
+
+                  {/* Speedy Judgement Buttons: True/False */}
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    {/* False (Cross) Button */}
+                    <button
+                      disabled={speedyAnswered}
+                      onClick={() => handleSpeedyAnswer(false)}
+                      className={`py-5 rounded-2xl font-extrabold text-lg transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${
+                        speedyAnswered
+                          ? 'opacity-40 cursor-not-allowed bg-gray-100 border border-gray-250 dark:bg-white/5 dark:border-white/5'
+                          : 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/10'
+                      }`}
+                    >
+                      {t('false_btn') || 'False'}
+                    </button>
+
+                    {/* True (Tick) Button */}
+                    <button
+                      disabled={speedyAnswered}
+                      onClick={() => handleSpeedyAnswer(true)}
+                      className={`py-5 rounded-2xl font-extrabold text-lg transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${
+                        speedyAnswered
+                          ? 'opacity-40 cursor-not-allowed bg-gray-100 border border-gray-250 dark:bg-white/5 dark:border-white/5'
+                          : 'bg-green-500 hover:bg-green-600 text-white shadow-green-500/10'
+                      }`}
+                    >
+                      {t('true_btn') || 'True'}
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-center text-gray-400 dark:text-gray-500 italic">
+                    Tap Correct/Incorrect immediately! Quick decisions score high multipliers.
+                  </p>
+                </motion.div>
+              )}
+
+              {gameMode === 'speedy' && gameState === 'complete' && (
+                <motion.div
+                  key="speedy-complete"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full py-6 text-center"
+                >
+                  <GlassCard className="p-8 sm:p-12 max-w-xl mx-auto shadow-2xl relative overflow-hidden border border-purple-250/30">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-purple-400/20 dark:bg-purple-900/10 rounded-full blur-[80px] -z-10" />
+
+                    {speedyLives === 0 ? (
+                      // GAME OVER SCREEN
+                      <>
+                        <div className="w-14 h-14 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-6 text-red-500">
+                          <Heart className="h-7 w-7" />
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('game_over') || 'Game Over!'}
+                        </h2>
+                        <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          You ran out of lives. Move faster and think twice next time!
+                        </p>
+                      </>
+                    ) : (
+                      // TIME UP (VICTORY) SCREEN
+                      <>
+                        <div className="flex justify-center gap-1 mb-6">
+                          {[...Array(3)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ scale: 0, rotate: -20 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ delay: i * 0.15, type: 'spring', stiffness: 200 }}
+                            >
+                              <Star 
+                                className={`h-10 w-10 ${
+                                  i < calculateStarsSq(speedyScore) 
+                                    ? 'text-amber-400 fill-amber-400 filter drop-shadow-md' 
+                                    : 'text-gray-300 dark:text-gray-700'
+                                }`} 
+                              />
+                            </motion.div>
+                          ))}
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
+                          {t('victory_speedy_review') || 'Time Up!'}
+                        </h2>
+                        <p className="text-sm text-gray-555 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                          {t('victory_speedy_review_desc')}
+                        </p>
+                      </>
+                    )}
+
+                    {/* Stats display */}
+                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-8 bg-white/50 dark:bg-[#16112a]/30 border border-gray-100 dark:border-white/5 p-4 rounded-2xl">
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-555">{t('score')}</div>
+                        <div className="text-xl font-extrabold text-purple-600 dark:text-purple-400 mt-1">{speedyScore}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-555">{t('high_score')}</div>
+                        <div className="text-xl font-extrabold text-purple-600 dark:text-purple-400 mt-1">
+                          {Math.max(speedyHighScores[currentLevelId] || 0, speedyScore)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                      <button
+                        onClick={() => initSpeedyReview(currentLevelId)}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 dark:border-[#2a2440] bg-white dark:bg-[#16112a] text-gray-750 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 rounded-full font-bold transition-all text-sm"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        Play Again
+                      </button>
+
+                      {currentLevelId < LEVELS.length ? (
+                        <button
+                          onClick={() => initSpeedyReview(currentLevelId + 1)}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold shadow-md shadow-purple-600/20 hover:shadow-lg transition-all text-sm bg-purple-600"
+                        >
+                          Next Level
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setGameState('idle')}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold shadow-md shadow-purple-600/20 hover:shadow-lg transition-all text-sm"
                         >
                           Back to Levels
                           <Trophy className="h-4 w-4" />
