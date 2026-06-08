@@ -7,7 +7,6 @@ import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { ScrollProgress } from '@/components/layout/scroll-progress';
 import { FloatingWidgets } from '@/components/layout/floating-widgets';
-import { ThemeScript } from '@/components/theme-script';
 import { VercelStats } from '@/components/vercel-stats';
 import { siteConfig } from '@/lib/constants';
 import '../globals.css';
@@ -82,7 +81,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className={inter.variable}>
       <head>
-        <ThemeScript />
+        <script
+          id="theme-script"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;if(r==='dark'){d.classList.add('dark');}else{d.classList.remove('dark');}d.style.colorScheme=r;}catch(e){}})();`
+          }}
+        />
         <Script
           id="organization-schema"
           type="application/ld+json"

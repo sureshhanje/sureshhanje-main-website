@@ -446,7 +446,7 @@ const LEVELS: Level[] = [
         english: 'Today', 
         kannada: 'ಇಂದು', 
         phonetic: 'Indu',
-        syllables: ['ಇನ್', 'ದು'],
+        syllables: ['ಇಂ', 'ದು'],
         phoneticSyllables: ['In', 'du'],
         englishTtsPhonetic: 'in-doo'
       },
@@ -628,7 +628,7 @@ const LEVELS: Level[] = [
         kannada: 'ಯಾವಾಗ?', 
         phonetic: 'Yavaga?',
         syllables: ['ಯಾ', 'ವಾ', 'ಗ'],
-        phoneticSyllables: ['Yā', 'tva', 'ga'],
+        phoneticSyllables: ['Yā', 'vā', 'ga'],
         englishTtsPhonetic: 'yaa-waa-guh'
       },
       { 
@@ -670,7 +670,7 @@ const LEVELS: Level[] = [
         english: 'Moon', 
         kannada: 'ಚಂದ್ರ', 
         phonetic: 'Chandra',
-        syllables: ['ಚನ್', 'ದ್ರ'],
+        syllables: ['ಚಂ', 'ದ್ರ'],
         phoneticSyllables: ['Chan', 'dra'],
         englishTtsPhonetic: 'chun-dhruh'
       },
