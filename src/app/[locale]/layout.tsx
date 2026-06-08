@@ -81,8 +81,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className={inter.variable}>
       <head>
-        <script
+        <Script
           id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;if(r==='dark'){d.classList.add('dark');}else{d.classList.remove('dark');}d.style.colorScheme=r;}catch(e){}})();`
           }}
