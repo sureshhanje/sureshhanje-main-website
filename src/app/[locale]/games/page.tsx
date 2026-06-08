@@ -19,6 +19,7 @@ interface VocabItem {
   phonetic: string;
   syllables?: string[];
   phoneticSyllables?: string[];
+  englishTtsPhonetic?: string;
 }
 
 interface Level {
@@ -59,7 +60,8 @@ const LEVELS: Level[] = [
         kannada: 'ನಮಸ್ಕಾರ', 
         phonetic: 'Namaskāra',
         syllables: ['ನ', 'ಮ', 'ಸ್ಕಾ', 'ರ'],
-        phoneticSyllables: ['Na', 'mas', 'kā', 'ra']
+        phoneticSyllables: ['Na', 'mas', 'kā', 'ra'],
+        englishTtsPhonetic: 'numus-kaara'
       },
       { 
         id: '1-2', 
@@ -67,7 +69,8 @@ const LEVELS: Level[] = [
         kannada: 'ಧನ್ಯವಾದ', 
         phonetic: 'Dhanyavāda',
         syllables: ['ಧ', 'ನ್ಯ', 'ವಾ', 'ದ'],
-        phoneticSyllables: ['Dhan', 'ya', 'vā', 'da']
+        phoneticSyllables: ['Dhan', 'ya', 'vā', 'da'],
+        englishTtsPhonetic: 'dhunya-vaada'
       },
       { 
         id: '1-3', 
@@ -75,7 +78,8 @@ const LEVELS: Level[] = [
         kannada: 'ಸುಸ್ವಾಗತ', 
         phonetic: 'Suswāgatha',
         syllables: ['ಸು', 'ಸ್ವಾ', 'ಗ', 'ತ'],
-        phoneticSyllables: ['Sus', 'wā', 'ga', 'tha']
+        phoneticSyllables: ['Sus', 'wā', 'ga', 'tha'],
+        englishTtsPhonetic: 'soos-waagatha'
       },
       { 
         id: '1-4', 
@@ -83,7 +87,8 @@ const LEVELS: Level[] = [
         kannada: 'ಹೋಗಿ ಬರುತ್ತೇನೆ', 
         phonetic: 'Hōgi baruttēne',
         syllables: ['ಹೋ', 'ಗಿ', 'ಬ', 'ರು', 'ತ್ತೇ', 'ನೆ'],
-        phoneticSyllables: ['Hō', 'gi', 'ba', 'rut', 'tē', 'ne']
+        phoneticSyllables: ['Hō', 'gi', 'ba', 'rut', 'tē', 'ne'],
+        englishTtsPhonetic: 'ho gee barutheynay'
       },
     ]
   },
@@ -98,7 +103,8 @@ const LEVELS: Level[] = [
         kannada: 'ನೀರು', 
         phonetic: 'Neeru',
         syllables: ['ನೀ', 'ರು'],
-        phoneticSyllables: ['Nee', 'ru']
+        phoneticSyllables: ['Nee', 'ru'],
+        englishTtsPhonetic: 'neeru'
       },
       { 
         id: '2-2', 
@@ -106,7 +112,8 @@ const LEVELS: Level[] = [
         kannada: 'ಊಟ', 
         phonetic: 'Oota',
         syllables: ['ಊ', 'ಟ'],
-        phoneticSyllables: ['Oo', 'ta']
+        phoneticSyllables: ['Oo', 'ta'],
+        englishTtsPhonetic: 'oota'
       },
       { 
         id: '2-3', 
@@ -114,7 +121,8 @@ const LEVELS: Level[] = [
         kannada: 'ಮನೆ', 
         phonetic: 'Mane',
         syllables: ['ಮ', 'ನೆ'],
-        phoneticSyllables: ['Ma', 'ne']
+        phoneticSyllables: ['Ma', 'ne'],
+        englishTtsPhonetic: 'mun-ay'
       },
       { 
         id: '2-4', 
@@ -122,7 +130,8 @@ const LEVELS: Level[] = [
         kannada: 'ರಸ್ತೆ', 
         phonetic: 'Raste',
         syllables: ['ರ', 'ಸ್ತೆ'],
-        phoneticSyllables: ['Ras', 'te']
+        phoneticSyllables: ['Ras', 'te'],
+        englishTtsPhonetic: 'rus-thay'
       },
     ]
   },
@@ -137,7 +146,8 @@ const LEVELS: Level[] = [
         kannada: 'ಒಂದು', 
         phonetic: 'Ondu',
         syllables: ['ಒಂ', 'ದು'],
-        phoneticSyllables: ['On', 'du']
+        phoneticSyllables: ['On', 'du'],
+        englishTtsPhonetic: 'ondu'
       },
       { 
         id: '3-2', 
@@ -145,7 +155,8 @@ const LEVELS: Level[] = [
         kannada: 'ಎರಡು', 
         phonetic: 'Eradu',
         syllables: ['ಎ', 'ರ', 'ಡು'],
-        phoneticSyllables: ['E', 'ra', 'du']
+        phoneticSyllables: ['E', 'ra', 'du'],
+        englishTtsPhonetic: 'yera-du'
       },
       { 
         id: '3-3', 
@@ -153,7 +164,8 @@ const LEVELS: Level[] = [
         kannada: 'ಮೂರು', 
         phonetic: 'Mooru',
         syllables: ['ಮೂ', 'ರು'],
-        phoneticSyllables: ['Moo', 'ru']
+        phoneticSyllables: ['Moo', 'ru'],
+        englishTtsPhonetic: 'mooru'
       },
       { 
         id: '3-4', 
@@ -161,7 +173,8 @@ const LEVELS: Level[] = [
         kannada: 'ನಾಲ್ಕು', 
         phonetic: 'Nālku',
         syllables: ['ನಾಲ್', 'ಕು'],
-        phoneticSyllables: ['Nāl', 'ku']
+        phoneticSyllables: ['Nāl', 'ku'],
+        englishTtsPhonetic: 'naalku'
       },
     ]
   },
@@ -176,7 +189,8 @@ const LEVELS: Level[] = [
         kannada: 'ಎಲ್ಲಿದೆ?', 
         phonetic: 'Ellide?',
         syllables: ['ಎಲ್', 'ಲಿ', 'ದೆ'],
-        phoneticSyllables: ['El', 'li', 'de']
+        phoneticSyllables: ['El', 'li', 'de'],
+        englishTtsPhonetic: 'ellyday'
       },
       { 
         id: '4-2', 
@@ -184,7 +198,8 @@ const LEVELS: Level[] = [
         kannada: 'ಎಷ್ಟು?', 
         phonetic: 'Eshtu?',
         syllables: ['ಎಶ್', 'ಟು'],
-        phoneticSyllables: ['Esh', 'tu']
+        phoneticSyllables: ['Esh', 'tu'],
+        englishTtsPhonetic: 'esh-too'
       },
       { 
         id: '4-3', 
@@ -192,7 +207,8 @@ const LEVELS: Level[] = [
         kannada: 'ಏನದು?', 
         phonetic: 'Ēnadu?',
         syllables: ['ಏ', 'ನ', 'ದು'],
-        phoneticSyllables: ['Ē', 'na', 'du']
+        phoneticSyllables: ['Ē', 'na', 'du'],
+        englishTtsPhonetic: 'ay-nadoo'
       },
       { 
         id: '4-4', 
@@ -200,11 +216,485 @@ const LEVELS: Level[] = [
         kannada: 'ಬನ್ನಿ', 
         phonetic: 'Banni',
         syllables: ['ಬನ್', 'ನಿ'],
-        phoneticSyllables: ['Ban', 'ni']
+        phoneticSyllables: ['Ban', 'ni'],
+        englishTtsPhonetic: 'bun-nee'
+      },
+    ]
+  },
+  {
+    id: 5,
+    titleKey: 'level5',
+    colorClass: 'from-purple-500/20 to-violet-500/20 border-purple-500/30 text-purple-600 dark:text-purple-400',
+    vocab: [
+      { 
+        id: '5-1', 
+        english: 'Red', 
+        kannada: 'ಕೆಂಪು', 
+        phonetic: 'Kempu',
+        syllables: ['ಕೆಂ', 'ಪು'],
+        phoneticSyllables: ['Kem', 'pu'],
+        englishTtsPhonetic: 'kem-poo'
+      },
+      { 
+        id: '5-2', 
+        english: 'Blue', 
+        kannada: 'ನೀಲಿ', 
+        phonetic: 'Neeli',
+        syllables: ['ನೀ', 'ಲಿ'],
+        phoneticSyllables: ['Nee', 'li'],
+        englishTtsPhonetic: 'nee-lee'
+      },
+      { 
+        id: '5-3', 
+        english: 'Green', 
+        kannada: 'ಹಸಿರು', 
+        phonetic: 'Hasiru',
+        syllables: ['ಹ', 'ಸಿ', 'ರು'],
+        phoneticSyllables: ['Ha', 'si', 'ru'],
+        englishTtsPhonetic: 'hu-see-roo'
+      },
+      { 
+        id: '5-4', 
+        english: 'Yellow', 
+        kannada: 'ಹಳದಿ', 
+        phonetic: 'Haladi',
+        syllables: ['ಹ', 'ಳ', 'ದಿ'],
+        phoneticSyllables: ['Ha', 'la', 'di'],
+        englishTtsPhonetic: 'hu-luh-dee'
+      },
+    ]
+  },
+  {
+    id: 6,
+    titleKey: 'level6',
+    colorClass: 'from-cyan-500/20 to-sky-500/20 border-cyan-500/30 text-cyan-600 dark:text-cyan-400',
+    vocab: [
+      { 
+        id: '6-1', 
+        english: 'Father', 
+        kannada: 'ಅಪ್ಪ', 
+        phonetic: 'Appa',
+        syllables: ['ಅಪ್', 'ಪ'],
+        phoneticSyllables: ['Ap', 'pa'],
+        englishTtsPhonetic: 'up-pah'
+      },
+      { 
+        id: '6-2', 
+        english: 'Mother', 
+        kannada: 'ಅಮ್ಮ', 
+        phonetic: 'Amma',
+        syllables: ['ಅಮ್', 'ಮ'],
+        phoneticSyllables: ['Am', 'ma'],
+        englishTtsPhonetic: 'um-mah'
+      },
+      { 
+        id: '6-3', 
+        english: 'Brother', 
+        kannada: 'ಅಣ್ಣ', 
+        phonetic: 'Anna',
+        syllables: ['ಅಣ್', 'ಣ'],
+        phoneticSyllables: ['An', 'na'],
+        englishTtsPhonetic: 'un-nah'
+      },
+      { 
+        id: '6-4', 
+        english: 'Sister', 
+        kannada: 'ಅಕ್ಕ', 
+        phonetic: 'Akka',
+        syllables: ['ಅಕ್', 'ಕ'],
+        phoneticSyllables: ['Ak', 'ka'],
+        englishTtsPhonetic: 'uk-kah'
+      },
+    ]
+  },
+  {
+    id: 7,
+    titleKey: 'level7',
+    colorClass: 'from-lime-500/20 to-green-500/20 border-lime-500/30 text-lime-600 dark:text-lime-400',
+    vocab: [
+      { 
+        id: '7-1', 
+        english: 'Eye', 
+        kannada: 'ಕಣ್ಣು', 
+        phonetic: 'Kannu',
+        syllables: ['ಕಣ್', 'ಣು'],
+        phoneticSyllables: ['Kan', 'nu'],
+        englishTtsPhonetic: 'kun-noo'
+      },
+      { 
+        id: '7-2', 
+        english: 'Ear', 
+        kannada: 'ಕಿವಿ', 
+        phonetic: 'Kivi',
+        syllables: ['ಕಿ', 'ವಿ'],
+        phoneticSyllables: ['Ki', 'vi'],
+        englishTtsPhonetic: 'kee-vee'
+      },
+      { 
+        id: '7-3', 
+        english: 'Hand', 
+        kannada: 'ಕೈ', 
+        phonetic: 'Kai',
+        syllables: ['ಕೈ'],
+        phoneticSyllables: ['Kai'],
+        englishTtsPhonetic: 'kye'
+      },
+      { 
+        id: '7-4', 
+        english: 'Head', 
+        kannada: 'ತಲೆ', 
+        phonetic: 'Tale',
+        syllables: ['ತ', 'ಲೆ'],
+        phoneticSyllables: ['Ta', 'le'],
+        englishTtsPhonetic: 'thuh-lay'
+      },
+    ]
+  },
+  {
+    id: 8,
+    titleKey: 'level8',
+    colorClass: 'from-orange-500/20 to-red-500/20 border-orange-500/30 text-orange-600 dark:text-orange-400',
+    vocab: [
+      { 
+        id: '8-1', 
+        english: 'Cat', 
+        kannada: 'ಬೆಕ್ಕು', 
+        phonetic: 'Bekku',
+        syllables: ['ಬೆಕ್', 'ಕು'],
+        phoneticSyllables: ['Bek', 'ku'],
+        englishTtsPhonetic: 'bek-koo'
+      },
+      { 
+        id: '8-2', 
+        english: 'Dog', 
+        kannada: 'ನಾಯಿ', 
+        phonetic: 'Nayi',
+        syllables: ['ನಾ', 'ಯಿ'],
+        phoneticSyllables: ['Nā', 'yi'],
+        englishTtsPhonetic: 'naa-yee'
+      },
+      { 
+        id: '8-3', 
+        english: 'Cow', 
+        kannada: 'ಹಸು', 
+        phonetic: 'Hasu',
+        syllables: ['ಹ', 'ಸು'],
+        phoneticSyllables: ['Ha', 'su'],
+        englishTtsPhonetic: 'hu-soo'
+      },
+      { 
+        id: '8-4', 
+        english: 'Tiger', 
+        kannada: 'ಹುಲಿ', 
+        phonetic: 'Huli',
+        syllables: ['ಹು', 'ಲಿ'],
+        phoneticSyllables: ['Hu', 'li'],
+        englishTtsPhonetic: 'hoo-lee'
+      },
+    ]
+  },
+  {
+    id: 9,
+    titleKey: 'level9',
+    colorClass: 'from-yellow-500/20 to-amber-500/20 border-yellow-500/30 text-yellow-600 dark:text-yellow-400',
+    vocab: [
+      { 
+        id: '9-1', 
+        english: 'Banana', 
+        kannada: 'ಬಾಳೆಹಣ್ಣು', 
+        phonetic: 'Balehannu',
+        syllables: ['ಬಾ', 'ಳೆ', 'ಹಣ್', 'ಣು'],
+        phoneticSyllables: ['Bā', 'le', 'han', 'nu'],
+        englishTtsPhonetic: 'baa-lay-hun-noo'
+      },
+      { 
+        id: '9-2', 
+        english: 'Mango', 
+        kannada: 'ಮಾವಿನಹಣ್ಣು', 
+        phonetic: 'Mavinahannu',
+        syllables: ['ಮಾ', 'ವಿ', 'ನ', 'ಹಣ್', 'ಣು'],
+        phoneticSyllables: ['Mā', 'vi', 'na', 'han', 'nu'],
+        englishTtsPhonetic: 'maa-vee-nuh-hun-noo'
+      },
+      { 
+        id: '9-3', 
+        english: 'Apple', 
+        kannada: 'ಸೇಬು', 
+        phonetic: 'Sebu',
+        syllables: ['ಸೇ', 'ಬು'],
+        phoneticSyllables: ['Sē', 'bu'],
+        englishTtsPhonetic: 'say-boo'
+      },
+      { 
+        id: '9-4', 
+        english: 'Coconut', 
+        kannada: 'ತೆಂಗಿನಕಾಯಿ', 
+        phonetic: 'Tenginakai',
+        syllables: ['ತೆಂ', 'ಗಿ', 'ನ', 'ಕಾ', 'ಯಿ'],
+        phoneticSyllables: ['Ten', 'gi', 'na', 'kā', 'yi'],
+        englishTtsPhonetic: 'then-gee-nuh-ka-yee'
+      },
+    ]
+  },
+  {
+    id: 10,
+    titleKey: 'level10',
+    colorClass: 'from-teal-500/20 to-emerald-500/20 border-teal-500/30 text-teal-600 dark:text-teal-400',
+    vocab: [
+      { 
+        id: '10-1', 
+        english: 'Today', 
+        kannada: 'ಇಂದು', 
+        phonetic: 'Indu',
+        syllables: ['ಇನ್', 'ದು'],
+        phoneticSyllables: ['In', 'du'],
+        englishTtsPhonetic: 'in-doo'
+      },
+      { 
+        id: '10-2', 
+        english: 'Tomorrow', 
+        kannada: 'ನಾಳೆ', 
+        phonetic: 'Nale',
+        syllables: ['ನಾ', 'ಳೆ'],
+        phoneticSyllables: ['Nā', 'le'],
+        englishTtsPhonetic: 'naa-lay'
+      },
+      { 
+        id: '10-3', 
+        english: 'Yesterday', 
+        kannada: 'ನಿನ್ನೆ', 
+        phonetic: 'Ninne',
+        syllables: ['ನಿನ್', 'ನೆ'],
+        phoneticSyllables: ['Nin', 'ne'],
+        englishTtsPhonetic: 'nin-nay'
+      },
+      { 
+        id: '10-4', 
+        english: 'Day', 
+        kannada: 'ದಿನ', 
+        phonetic: 'Dina',
+        syllables: ['ದಿ', 'ನ'],
+        phoneticSyllables: ['Di', 'na'],
+        englishTtsPhonetic: 'dee-nuh'
+      },
+    ]
+  },
+  {
+    id: 11,
+    titleKey: 'level11',
+    colorClass: 'from-fuchsia-500/20 to-pink-500/20 border-fuchsia-500/30 text-fuchsia-600 dark:text-fuchsia-400',
+    vocab: [
+      { 
+        id: '11-1', 
+        english: 'Rice', 
+        kannada: 'ಅನ್ನ', 
+        phonetic: 'Anna',
+        syllables: ['ಅನ್', 'ನ'],
+        phoneticSyllables: ['An', 'na'],
+        englishTtsPhonetic: 'un-nah'
+      },
+      { 
+        id: '11-2', 
+        english: 'Milk', 
+        kannada: 'ಹಾಲು', 
+        phonetic: 'Halu',
+        syllables: ['ಹಾ', 'ಲು'],
+        phoneticSyllables: ['Hā', 'lu'],
+        englishTtsPhonetic: 'haa-loo'
+      },
+      { 
+        id: '11-3', 
+        english: 'Salt', 
+        kannada: 'ಉಪ್ಪು', 
+        phonetic: 'Uppu',
+        syllables: ['ಉಪ್', 'ಪು'],
+        phoneticSyllables: ['Up', 'pu'],
+        englishTtsPhonetic: 'oop-poo'
+      },
+      { 
+        id: '11-4', 
+        english: 'Ghee', 
+        kannada: 'ತುಪ್ಪ', 
+        phonetic: 'Tuppa',
+        syllables: ['ತುಪ್', 'ಪ'],
+        phoneticSyllables: ['Tup', 'pa'],
+        englishTtsPhonetic: 'toop-pah'
+      },
+    ]
+  },
+  {
+    id: 12,
+    titleKey: 'level12',
+    colorClass: 'from-rose-500/20 to-red-500/20 border-rose-500/30 text-rose-600 dark:text-rose-400',
+    vocab: [
+      { 
+        id: '12-1', 
+        english: 'Eat', 
+        kannada: 'ತಿನ್ನು', 
+        phonetic: 'Tinnu',
+        syllables: ['ತಿನ್', 'ನು'],
+        phoneticSyllables: ['Tin', 'nu'],
+        englishTtsPhonetic: 'thin-noo'
+      },
+      { 
+        id: '12-2', 
+        english: 'Drink', 
+        kannada: 'ಕುಡಿ', 
+        phonetic: 'Kudi',
+        syllables: ['ಕು', 'ಡಿ'],
+        phoneticSyllables: ['Ku', 'di'],
+        englishTtsPhonetic: 'koo-dee'
+      },
+      { 
+        id: '12-3', 
+        english: 'Sleep', 
+        kannada: 'ಮಲಗು', 
+        phonetic: 'Malagu',
+        syllables: ['ಮ', 'ಲ', 'ಗು'],
+        phoneticSyllables: ['Ma', 'la', 'gu'],
+        englishTtsPhonetic: 'muh-luh-goo'
+      },
+      { 
+        id: '12-4', 
+        english: 'Go', 
+        kannada: 'ಹೋಗು', 
+        phonetic: 'Hogu',
+        syllables: ['ಹೋ', 'ಗು'],
+        phoneticSyllables: ['Hō', 'gu'],
+        englishTtsPhonetic: 'ho-goo'
+      },
+    ]
+  },
+  {
+    id: 13,
+    titleKey: 'level13',
+    colorClass: 'from-sky-500/20 to-blue-500/20 border-sky-500/30 text-sky-600 dark:text-sky-400',
+    vocab: [
+      { 
+        id: '13-1', 
+        english: 'Up', 
+        kannada: 'ಮೇಲೆ', 
+        phonetic: 'Mele',
+        syllables: ['ಮೇ', 'ಲೆ'],
+        phoneticSyllables: ['Mē', 'le'],
+        englishTtsPhonetic: 'may-lay'
+      },
+      { 
+        id: '13-2', 
+        english: 'Down', 
+        kannada: 'ಕೆಳಗೆ', 
+        phonetic: 'Kelage',
+        syllables: ['ಕೆ', 'ಳ', 'ಗೆ'],
+        phoneticSyllables: ['Ke', 'la', 'ge'],
+        englishTtsPhonetic: 'keh-luh-gay'
+      },
+      { 
+        id: '13-3', 
+        english: 'Left', 
+        kannada: 'ಎಡ', 
+        phonetic: 'Eda',
+        syllables: ['ಎ', 'ಡ'],
+        phoneticSyllables: ['E', 'da'],
+        englishTtsPhonetic: 'ed-uh'
+      },
+      { 
+        id: '13-4', 
+        english: 'Right', 
+        kannada: 'ಬಲ', 
+        phonetic: 'Bala',
+        syllables: ['ಬ', 'ಲ'],
+        phoneticSyllables: ['Ba', 'la'],
+        englishTtsPhonetic: 'buh-luh'
+      },
+    ]
+  },
+  {
+    id: 14,
+    titleKey: 'level14',
+    colorClass: 'from-indigo-500/20 to-purple-500/20 border-indigo-500/30 text-indigo-600 dark:text-indigo-400',
+    vocab: [
+      { 
+        id: '14-1', 
+        english: 'Who', 
+        kannada: 'ಯಾರು?', 
+        phonetic: 'Yaru?',
+        syllables: ['ಯಾ', 'ರು'],
+        phoneticSyllables: ['Yā', 'ru'],
+        englishTtsPhonetic: 'yaa-roo'
+      },
+      { 
+        id: '14-2', 
+        english: 'When', 
+        kannada: 'ಯಾವಾಗ?', 
+        phonetic: 'Yavaga?',
+        syllables: ['ಯಾ', 'ವಾ', 'ಗ'],
+        phoneticSyllables: ['Yā', 'tva', 'ga'],
+        englishTtsPhonetic: 'yaa-waa-guh'
+      },
+      { 
+        id: '14-3', 
+        english: 'Why', 
+        kannada: 'ಏಕೆ?', 
+        phonetic: 'Eke?',
+        syllables: ['ಏ', 'ಕೆ'],
+        phoneticSyllables: ['Ē', 'ke'],
+        englishTtsPhonetic: 'ay-kay'
+      },
+      { 
+        id: '14-4', 
+        english: 'How', 
+        kannada: 'ಹೇಗೆ?', 
+        phonetic: 'Hege?',
+        syllables: ['ಹೇ', 'ಗೆ'],
+        phoneticSyllables: ['Hē', 'ge'],
+        englishTtsPhonetic: 'hay-gay'
+      },
+    ]
+  },
+  {
+    id: 15,
+    titleKey: 'level15',
+    colorClass: 'from-green-500/20 to-emerald-500/20 border-green-500/30 text-green-600 dark:text-green-400',
+    vocab: [
+      { 
+        id: '15-1', 
+        english: 'Sun', 
+        kannada: 'ಸೂರ್ಯ', 
+        phonetic: 'Surya',
+        syllables: ['ಸೂ', 'ರ್ಯ'],
+        phoneticSyllables: ['Sū', 'rya'],
+        englishTtsPhonetic: 'soo-ryuh'
+      },
+      { 
+        id: '15-2', 
+        english: 'Moon', 
+        kannada: 'ಚಂದ್ರ', 
+        phonetic: 'Chandra',
+        syllables: ['ಚನ್', 'ದ್ರ'],
+        phoneticSyllables: ['Chan', 'dra'],
+        englishTtsPhonetic: 'chun-dhruh'
+      },
+      { 
+        id: '15-3', 
+        english: 'Flower', 
+        kannada: 'ಹೂವು', 
+        phonetic: 'Hoovu',
+        syllables: ['ಹೂ', 'ವು'],
+        phoneticSyllables: ['Hoo', 'vu'],
+        englishTtsPhonetic: 'hoo-voo'
+      },
+      { 
+        id: '15-4', 
+        english: 'Tree', 
+        kannada: 'ಮರ', 
+        phonetic: 'Mara',
+        syllables: ['ಮ', 'ರ'],
+        phoneticSyllables: ['Ma', 'ra'],
+        englishTtsPhonetic: 'muh-ruh'
       },
     ]
   }
-];
+];;
 
 export default function GamesPage() {
   const t = useTranslations('games');
@@ -414,6 +904,7 @@ export default function GamesPage() {
     }
   };
 
+
   // Text-To-Speech engine using browser speechSynthesis
   const speakKannadaWord = (text: string) => {
     if (!ttsEnabled || typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -450,14 +941,20 @@ export default function GamesPage() {
           const allVocab = LEVELS.flatMap(l => l.vocab);
           const matchItem = allVocab.find(item => item.kannada === text);
           if (matchItem) {
-            // Strip macrons and diacritics (e.g. ō -> o, ē -> e, ā -> a) so the English voice reads it smoothly
-            textToSpeak = matchItem.phonetic.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\?/g, "");
+            // Use custom optimized English fallback pronunciation or normalize the default phonetic string
+            textToSpeak = matchItem.englishTtsPhonetic || matchItem.phonetic.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\?/g, "");
             lang = 'en-US';
             
-            // Look for a female English voice (e.g. Zira, Hazel, Samantha, Google female)
+            // Look for a female English voice (e.g. Zira, Hazel, Samantha, Google female, natural)
             const engFemaleVoice = voiceList.find(v => 
               v.lang.startsWith('en') && 
-              (v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('hazel'))
+              (v.name.toLowerCase().includes('zira') || 
+               v.name.toLowerCase().includes('female') || 
+               v.name.toLowerCase().includes('google') || 
+               v.name.toLowerCase().includes('samantha') || 
+               v.name.toLowerCase().includes('hazel') ||
+               v.name.toLowerCase().includes('natural') || 
+               v.name.toLowerCase().includes('tessa'))
             );
             if (engFemaleVoice) {
               targetVoice = engFemaleVoice;
@@ -1071,7 +1568,7 @@ export default function GamesPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="w-full text-center py-10"
                 >
-                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                  <GlassCard className="p-8 sm:p-12 max-w-4xl mx-auto shadow-xl border border-primary-200/40">
                     <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center mx-auto mb-6 text-blue-600 dark:text-blue-400">
                       <Trophy className="h-7 w-7" />
                     </div>
@@ -1080,11 +1577,11 @@ export default function GamesPage() {
                       {t('game1_desc')}
                     </p>
 
-                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-4">
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-555 uppercase tracking-wider mb-4">
                       {t('select_level')}
                     </h3>
                     
-                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                       {LEVELS.map(level => {
                         const best = highScores[level.id];
                         return (
@@ -1308,7 +1805,7 @@ export default function GamesPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="w-full text-center py-10"
                 >
-                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                  <GlassCard className="p-8 sm:p-12 max-w-4xl mx-auto shadow-xl border border-primary-200/40">
                     <div className="w-14 h-14 rounded-full bg-pink-50 dark:bg-pink-950/40 flex items-center justify-center mx-auto mb-6 text-pink-600 dark:text-pink-400">
                       <Volume1 className="h-7 w-7" />
                     </div>
@@ -1317,11 +1814,11 @@ export default function GamesPage() {
                       {t('sound_quest_desc')}
                     </p>
 
-                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-4">
+                    <h3 className="text-xs font-semibold text-gray-400 dark:text-gray-555 uppercase tracking-wider mb-4">
                       {t('select_level')}
                     </h3>
                     
-                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                       {LEVELS.map(level => {
                         const best = sqHighScores[level.id];
                         return (
@@ -1524,7 +2021,7 @@ export default function GamesPage() {
                         <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-gray-900 dark:text-white">
                           {t('victory_sound_quest') || 'Victory!'}
                         </h2>
-                        <p className="text-sm text-gray-505 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                        <p className="text-sm text-gray-555 dark:text-gray-400 mb-8 max-w-md mx-auto">
                           {t('victory_sound_quest_desc')}
                         </p>
                       </>
@@ -1553,13 +2050,23 @@ export default function GamesPage() {
                         Play Again
                       </button>
 
-                      <button
-                        onClick={() => setGameState('idle')}
-                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-pink-650 hover:bg-pink-700 text-white rounded-full font-bold shadow-md shadow-pink-600/20 hover:shadow-lg transition-all text-sm bg-pink-600"
-                      >
-                        Back to Levels
-                        <Trophy className="h-4 w-4" />
-                      </button>
+                      {currentLevelId < LEVELS.length ? (
+                        <button
+                          onClick={() => initSoundQuest(currentLevelId + 1)}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full font-bold shadow-md shadow-pink-600/20 hover:shadow-lg transition-all text-sm"
+                        >
+                          Next Level
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setGameState('idle')}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full font-bold shadow-md shadow-pink-600/20 hover:shadow-lg transition-all text-sm bg-pink-600"
+                        >
+                          Back to Levels
+                          <Trophy className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </GlassCard>
                 </motion.div>
@@ -1576,7 +2083,7 @@ export default function GamesPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="w-full text-center py-10"
                 >
-                  <GlassCard className="p-8 sm:p-12 max-w-2xl mx-auto shadow-xl border border-primary-200/40">
+                  <GlassCard className="p-8 sm:p-12 max-w-4xl mx-auto shadow-xl border border-primary-200/40">
                     <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center mx-auto mb-6 text-amber-600 dark:text-amber-400">
                       <Sparkles className="h-7 w-7 animate-pulse" />
                     </div>
@@ -1589,7 +2096,7 @@ export default function GamesPage() {
                       {t('select_level')}
                     </h3>
                     
-                    <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                       {LEVELS.map(level => {
                         const best = wbHighScores[level.id];
                         return (
@@ -1937,13 +2444,23 @@ export default function GamesPage() {
                         Play Again
                       </button>
 
-                      <button
-                        onClick={() => setGameState('idle')}
-                        className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-md shadow-amber-600/20 hover:shadow-lg transition-all text-sm"
-                      >
-                        Back to Levels
-                        <Trophy className="h-4 w-4" />
-                      </button>
+                      {currentLevelId < LEVELS.length ? (
+                        <button
+                          onClick={() => initWordBuilder(currentLevelId + 1)}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-md shadow-amber-600/20 hover:shadow-lg transition-all text-sm"
+                        >
+                          Next Level
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setGameState('idle')}
+                          className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold shadow-md shadow-amber-600/20 hover:shadow-lg transition-all text-sm"
+                        >
+                          Back to Levels
+                          <Trophy className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </GlassCard>
                 </motion.div>
