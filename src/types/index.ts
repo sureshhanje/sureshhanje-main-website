@@ -18,14 +18,13 @@ export interface Course {
 export interface Review {
   id: number;
   name: string;
-  nameKn: string;
-  class: string;
+  verified: 'Yes' | 'No badge shown' | '—';
+  date: string;
+  category: string;
+  board: string;
+  subject: string;
   rating: number;
   text: string;
-  textKn: string;
-  date: string;
-  avatar?: string;
-  isVideo?: boolean;
 }
 
 export interface BlogPost {

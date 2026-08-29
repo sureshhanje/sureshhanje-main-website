@@ -10,10 +10,6 @@ export const siteConfig = {
     whatsapp: 'https://wa.me/919686068162',
     email: 'mailto:sureshhanje96@gmail.com',
     phone: 'tel:+919686068162',
-    youtube: 'https://youtube.com/@sureshhanje',
-    instagram: 'https://instagram.com/sureshhanje',
-    facebook: 'https://facebook.com/sureshhanje',
-    twitter: 'https://twitter.com/sureshhanje',
   },
   stats: {
     experience: 15,

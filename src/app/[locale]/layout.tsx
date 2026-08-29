@@ -17,16 +17,39 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const isKn = locale === 'kn';
   const canonicalUrl = isKn ? `${siteConfig.url}/kn` : siteConfig.url;
+
   return {
     metadataBase: new URL(siteConfig.url),
     title: {
-      default: isKn ? 'ಸುರೇಶ ಹಂಜೆ | ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕ' : 'Best Kannada Tutor in Karnataka | Online Kannada Teacher',
-      template: isKn ? '%s | ಸುರೇಶ ಹಂಜೆ' : '%s | Suresh Hanje',
+      default: isKn
+        ? 'ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಟ್ಯೂಷನ್ ಮತ್ತು ಶಿಕ್ಷಕ | ಸುರೇಶ ಹಂಜೆ (CBSE, ICSE, PUC, Spoken Kannada)'
+        : 'Best Online Kannada Tuition in Bangalore | Suresh Hanje Kannada Tutor',
+      template: isKn ? '%s | ಸುರೇಶ ಹಂಜೆ - ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕ' : '%s | Suresh Hanje - Best Online Kannada Tutor',
     },
     description: isKn
-      ? 'ಅನುಭವಿ ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕರಿಂದ ಶಾಲೆ, ಪಿಯುಸಿ, ಪದವಿ, ಆಡು ಕನ್ನಡ ಮತ್ತು ಸ್ಪರ್ಧಾತ್ಮಕ ಪರೀಕ್ಷೆಗಳಿಗೆ ಕನ್ನಡ ಕಲಿಯಿರಿ. ಉಚಿತ ಡೆಮೊ ಬುಕ್ ಮಾಡಿ.'
-      : 'Best Kannada tutor and online Kannada teacher for school, PUC, degree, spoken Kannada, and competitive exam students. Book a free demo class online.',
-    keywords: ['Best Kannada Tutor', 'Online Kannada Teacher', 'Kannada Tutor Online', 'Kannada Classes Online', 'Spoken Kannada Classes', 'Kannada Teacher', 'Learn Kannada Online', 'Kannada Tuition'],
+      ? '15+ ವರ್ಷಗಳ ಅನುಭವವಿರುವ ಪ್ರಸಿದ್ಧ ಶಿಕ್ಷಕರಿಂದ ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಟ್ಯೂಷನ್. CBSE, ICSE, State ಬೋರ್ಡ್, 1 & 2ನೇ PUC, ಸ್ಪರ್ಧಾತ್ಮಕ ಪರೀಕ್ಷೆ ಮತ್ತು ಆಡು ಕನ್ನಡ ತರಗತಿಗಳು. ಇಂದೇ ಉಚಿತ ಡೆಮೊ ಬುಕ್ ಮಾಡಿ!'
+      : 'Top-rated online Kannada tuition & classes in Bangalore by experienced tutor Suresh Hanje (15+ yrs exp). Expert coaching for CBSE, ICSE, State Board, 1st/2nd PUC, Non-Kannadigas & Competitive Exams. Book a Free Demo!',
+    keywords: [
+      'online kannada tuition',
+      'kannada online tuition',
+      'best kannada tutor in bangalore',
+      'online kannada classes',
+      'kannada tuition near me',
+      'spoken kannada classes online',
+      'kannada tuition for cbse',
+      'kannada tuition for icse',
+      'puc kannada tuition',
+      'kannada for non kannadigas',
+      'private kannada tutor bangalore',
+      'learn kannada online',
+      'kannada teacher online',
+      'suresh hanje kannada tutor',
+      'online kannada grammar class',
+      'sslc kannada tuition',
+    ],
+    authors: [{ name: 'Suresh Hanje' }],
+    creator: 'Suresh Hanje',
+    publisher: 'Suresh Hanje Kannada Academy',
     alternates: {
       canonical: canonicalUrl,
       languages: {
@@ -39,18 +62,29 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       locale: isKn ? 'kn_IN' : 'en_IN',
       url: canonicalUrl,
       siteName: siteConfig.name,
-      title: isKn ? 'ಸುರೇಶ ಹಂಜೆ | ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕ' : 'Best Kannada Tutor in Karnataka | Online Kannada Teacher',
+      title: isKn
+        ? 'ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಟ್ಯೂಷನ್ ಮತ್ತು ಶಿಕ್ಷಕ | ಸುರೇಶ ಹಂಜೆ'
+        : 'Best Online Kannada Tuition in Bangalore | Suresh Hanje',
       description: isKn
-        ? 'ಅನುಭವಿ ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕರಿಂದ ಶಾಲೆ, ಪಿಯುಸಿ, ಪದವಿ, ಆಡು ಕನ್ನಡ ಮತ್ತು ಸ್ಪರ್ಧಾತ್ಮಕ ಪರೀಕ್ಷೆಗಳಿಗೆ ಕನ್ನಡ ಕಲಿಯಿರಿ.'
-        : 'Best Kannada tutor and online Kannada teacher for school, PUC, degree, spoken Kannada, and competitive exam students.',
-      images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: siteConfig.name }],
+        ? 'CBSE, ICSE, State ಬೋರ್ಡ್, PUC ಮತ್ತು ಆಡು ಕನ್ನಡಕ್ಕೆ ಅತ್ಯುತ್ತಮ ಆನ್‌ಲೈನ್ ಕನ್ನಡ ತರಗತಿಗಳು.'
+        : 'Top-rated online Kannada classes & private tuition in Bangalore for CBSE, ICSE, PUC, Spoken Kannada & Competitive Exams.',
+      images: [
+        {
+          url: siteConfig.ogImage,
+          width: 1200,
+          height: 630,
+          alt: 'Suresh Hanje - Best Online Kannada Tutor in Bangalore',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: isKn ? 'ಸುರೇಶ ಹಂಜೆ | ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕ' : 'Best Kannada Tutor in Karnataka | Online Kannada Teacher',
+      title: isKn
+        ? 'ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಟ್ಯೂಷನ್ | ಸುರೇಶ ಹಂಜೆ'
+        : 'Best Online Kannada Tuition in Bangalore | Suresh Hanje',
       description: isKn
-        ? 'ಅನುಭವಿ ಆನ್‌ಲೈನ್ ಕನ್ನಡ ಶಿಕ್ಷಕರಿಂದ ಕನ್ನಡ ಕಲಿಯಿರಿ. ಉಚಿತ ಡೆಮೊ ಬುಕ್ ಮಾಡಿ.'
-        : 'Learn Kannada with a trusted online teacher. Book a free demo class.',
+        ? 'ಅನುಭವಿ ಶಿಕ್ಷಕರಿಂದ ಕನ್ನಡ ಕಲಿಯಿರಿ. ಉಚಿತ ಡೆಮೊ ಬುಕ್ ಮಾಡಿ.'
+        : 'Learn Kannada online with 15+ years experienced master tutor. Book a free demo class today.',
       images: [siteConfig.ogImage],
     },
     category: 'education',
@@ -89,24 +123,66 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           }}
         />
         <Script
-          id="organization-schema"
+          id="educational-organization-schema"
           type="application/ld+json"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'EducationalOrganization',
-              name: siteConfig.name,
-              alternateName: 'Best Kannada Tutor',
+              '@type': ['EducationalOrganization', 'LocalBusiness', 'EducationalOccupationalProgram'],
+              name: 'Suresh Hanje Kannada Tutor & Online Tuition',
+              alternateName: [
+                'Best Online Kannada Tuition Bangalore',
+                'Suresh Hanje Online Kannada Classes',
+                'Kannada Tutor for CBSE ICSE PUC',
+              ],
               url: siteConfig.url,
               logo: `${siteConfig.url}/icon.svg`,
-              description: siteConfig.description,
-              sameAs: [siteConfig.links.facebook, siteConfig.links.instagram, siteConfig.links.youtube, siteConfig.links.twitter],
+              image: `${siteConfig.url}/images/og-image.jpg`,
+              description:
+                'Top-rated Online Kannada Tuition in Bangalore providing one-on-one and group coaching for CBSE, ICSE, State Board, 1st & 2nd PUC, Non-Kannadigas spoken Kannada, and Karnataka competitive exams.',
+              telephone: siteConfig.links.phone.replace('tel:', ''),
+              email: siteConfig.links.email.replace('mailto:', ''),
+              priceRange: '₹₹',
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Bangalore',
+                addressRegion: 'Karnataka',
+                addressCountry: 'IN',
+              },
+              geo: {
+                '@type': 'GeoCoordinates',
+                latitude: 12.9716,
+                longitude: 77.5946,
+              },
+              areaServed: [
+                { '@type': 'City', name: 'Bangalore' },
+                { '@type': 'State', name: 'Karnataka' },
+                { '@type': 'Country', name: 'India' },
+                { '@type': 'AdministrativeArea', name: 'Worldwide Online' },
+              ],
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '5.0',
+                reviewCount: '40',
+                bestRating: '5',
+                worstRating: '1',
+              },
+              knowsAbout: [
+                'Kannada Language',
+                'Spoken Kannada',
+                'CBSE Kannada Syllabus',
+                'ICSE Kannada Syllabus',
+                'Karnataka State Board Kannada',
+                '1st & 2nd PUC Kannada',
+                'Hale Kannada Grammar & Literature',
+                'KAS, FDA, SDA Competitive Exam Kannada',
+              ],
               contactPoint: {
                 '@type': 'ContactPoint',
                 telephone: siteConfig.links.phone.replace('tel:', ''),
-                contactType: 'customer support',
-                availableLanguage: ['en', 'kn'],
+                contactType: 'admissions and tutoring support',
+                availableLanguage: ['en', 'kn', 'hi'],
               },
             }),
           }}

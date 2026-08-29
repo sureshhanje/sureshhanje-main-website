@@ -224,15 +224,17 @@ export default function HomePage() {
                           <Star key={i} className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
                         ))}
                       </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">&ldquo;{locale === 'kn' ? review.textKn : review.text}&rdquo;</p>
+                      <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">&ldquo;{review.text}&rdquo;</p>
                     </div>
                     <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-[#2a2440]">
                       <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-700 dark:text-primary-400 font-semibold text-sm shrink-0">
-                        {(locale === 'kn' ? review.nameKn : review.name).charAt(0)}
+                        {review.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-medium text-sm text-gray-900 dark:text-white">{locale === 'kn' ? review.nameKn : review.name}</div>
-                        <div className="text-[11px] text-gray-400">{review.class}</div>
+                        <div className="font-medium text-sm text-gray-900 dark:text-white">{review.name}</div>
+                        <div className="text-[11px] text-gray-400">
+                          {review.category}{review.board && review.board !== '—' ? ` • ${review.board}` : ''}
+                        </div>
                       </div>
                     </div>
                   </GlassCard>

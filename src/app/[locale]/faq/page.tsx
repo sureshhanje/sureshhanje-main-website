@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Script from 'next/script';
 import { useTranslations, useLocale } from 'next-intl';
 import { ChevronDown, Search, X, HelpCircle, GraduationCap, DollarSign, Settings, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -205,6 +206,26 @@ export default function FAQPage() {
           </AnimatePresence>
         </div>
       </section>
+
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.slice(0, 15).map((faq) => ({
+              '@type': 'Question',
+              name: t(faq.questionKey),
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: t(faq.answerKey),
+              },
+            })),
+          }),
+        }}
+      />
     </>
   );
 }

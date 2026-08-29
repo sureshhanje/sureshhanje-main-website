@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Mail, Phone, Heart } from 'lucide-react';
 import { siteConfig } from '@/lib/constants';
-import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from '@/components/shared/social-icons';
 import { getLocalizedPath, isActiveNavLink, footerLinkClass } from '@/lib/navigation';
 import { cn } from '@/lib/utils';
 
@@ -21,13 +20,6 @@ const resourceLinks = [
   { href: '/faq', key: 'faq' },
   { href: '/reviews', key: 'reviews' },
   // { href: '/resources', key: 'resources' },
-] as const;
-
-const socialLinks = [
-  { icon: FacebookIcon, href: siteConfig.links.facebook, label: 'Facebook' },
-  { icon: TwitterIcon, href: siteConfig.links.twitter, label: 'Twitter' },
-  { icon: InstagramIcon, href: siteConfig.links.instagram, label: 'Instagram' },
-  { icon: YoutubeIcon, href: siteConfig.links.youtube, label: 'YouTube' },
 ] as const;
 
 function FooterNavLink({
@@ -76,20 +68,6 @@ export function Footer() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 leading-relaxed max-w-xs">
               {t('description')}
             </p>
-            <div className="flex items-center gap-2 mt-5">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="p-2 rounded-full text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all duration-200"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Quick Links */}

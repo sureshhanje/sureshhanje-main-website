@@ -1,19 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Phone, Mail, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
-import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from '@/components/shared/social-icons';
+import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
 import { GlassCard } from '@/components/shared/glass-card';
 import { SectionHeader } from '@/components/shared/section-header';
 import { FadeIn } from '@/components/animations/fade-in';
 import { siteConfig } from '@/lib/constants';
 
 export default function ContactPage() {
-  const [sent, setSent] = useState(false);
   const t = useTranslations('contact');
-
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSent(true); };
 
   return (
     <>
@@ -24,48 +19,46 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="section-padding -mt-8">
+      <section className="section-padding -mt-8 pb-20">
         <div className="max-w-3xl mx-auto">
           <FadeIn>
-            <div className="flex flex-col gap-5">
-              <GlassCard>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">{t('info_title')}</h3>
-                <div className="space-y-4">
+            <div className="flex flex-col gap-6">
+              <GlassCard className="p-8">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('info_title')}</h3>
+                <div className="space-y-5">
                   {[
-                    { icon: Phone, text: t('info_phone') },
-                    { icon: Mail, text: t('info_email') },
+                    { icon: Phone, text: t('info_phone'), href: siteConfig.links.phone },
+                    { icon: Mail, text: t('info_email'), href: siteConfig.links.email },
                     { icon: MapPin, text: t('info_location') },
                     { icon: Clock, text: t('info_hours') },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-primary-50 dark:bg-primary-950/40">
-                        <item.icon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="p-3 rounded-2xl bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400">
+                        <item.icon className="h-5 w-5" />
                       </div>
-                      <span className="text-sm text-gray-600 dark:text-gray-300">{item.text}</span>
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          className="text-base text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors"
+                        >
+                          {item.text}
+                        </a>
+                      ) : (
+                        <span className="text-base text-gray-700 dark:text-gray-200 font-medium">{item.text}</span>
+                      )}
                     </div>
                   ))}
                 </div>
               </GlassCard>
 
-              <GlassCard>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('social_title')}</h3>
-                <div className="flex items-center gap-2">
-                  {[
-                    { icon: YoutubeIcon, href: siteConfig.links.youtube },
-                    { icon: InstagramIcon, href: siteConfig.links.instagram },
-                    { icon: FacebookIcon, href: siteConfig.links.facebook },
-                    { icon: TwitterIcon, href: siteConfig.links.twitter },
-                  ].map((s, i) => (
-                    <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all">
-                      <s.icon className="h-5 w-5" />
-                    </a>
-                  ))}
-                </div>
-              </GlassCard>
-
-              <a href={siteConfig.links.whatsapp} target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3.5 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full shadow-md shadow-green-500/20 transition-all">
-                <MessageCircle className="h-5 w-5" />{t('whatsapp')}
+              <a
+                href={siteConfig.links.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 w-full py-4 bg-green-500 hover:bg-green-600 active:scale-[0.99] text-white font-semibold text-base rounded-2xl shadow-lg shadow-green-500/20 transition-all hover-lift"
+              >
+                <MessageCircle className="h-5 w-5" />
+                <span>{t('whatsapp')}</span>
               </a>
             </div>
           </FadeIn>
