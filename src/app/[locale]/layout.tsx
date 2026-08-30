@@ -100,7 +100,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     icons: {
-      icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+      icon: [{ url: '/icon', type: 'image/png' }],
       apple: '/apple-icon',
     },
   };

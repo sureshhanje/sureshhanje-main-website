@@ -13,11 +13,11 @@ export default function AppleIcon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%)',
+          background: 'linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #3b82f6 100%)',
           borderRadius: 36,
           color: 'white',
-          fontSize: 100,
-          fontWeight: 700,
+          fontSize: 110,
+          fontWeight: 800,
         }}
       >
         ಕ
