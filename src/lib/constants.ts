@@ -15,7 +15,7 @@ export const siteConfig = {
     experience: 15,
     students: 500,
     classes: 1000,
-    rating: 4.9,
+    rating: 5.0,
   },
 };
 
