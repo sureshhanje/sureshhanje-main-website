@@ -10,6 +10,14 @@ export const courses: Course[] = [
     fees: '₹450/hour',
   },
   {
+    id: 'school-6-8', slug: 'kannada-class-6-8', category: 'school-6-8', categoryLabel: 'School (6-8)',
+    titleKey: 'courses.school68_title', descriptionKey: 'courses.school68_desc',
+    duration: '10 months', level: 'Intermediate',
+    features: ['Grammar mastery', 'Essay writing', 'Poetry analysis', 'Regular tests'],
+    curriculumKeys: [], outcomesKeys: [], icon: 'GraduationCap',
+    fees: '₹500/hour',
+  },
+  {
     id: 'school-9-10', slug: 'kannada-class-9-10', category: 'school-9-10', categoryLabel: 'School (9-10)',
     titleKey: 'courses.school910_title', descriptionKey: 'courses.school910_desc',
     duration: '10 months', level: 'Intermediate',
