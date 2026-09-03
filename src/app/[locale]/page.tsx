@@ -87,7 +87,7 @@ export default function HomePage() {
 
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200/80 dark:border-[#2a2440] bg-white dark:bg-[#16112a] hover-lift">
                   <img
-                    src="/placeholder.jpeg"
+                    src="/photo.jpeg"
                     alt="Suresh Hanje — Kannada Tutor"
                     className="w-full aspect-[4/3] object-cover"
                   />
