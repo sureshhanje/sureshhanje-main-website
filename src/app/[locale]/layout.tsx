@@ -9,6 +9,7 @@ import { ScrollProgress } from '@/components/layout/scroll-progress';
 import { FloatingWidgets } from '@/components/layout/floating-widgets';
 import { VercelStats } from '@/components/vercel-stats';
 import { siteConfig } from '@/lib/constants';
+import { safeJsonLd } from '@/lib/utils';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
@@ -100,8 +101,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     icons: {
-      icon: [{ url: '/icon', type: 'image/png' }],
-      apple: '/apple-icon',
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/icon.svg', type: 'image/svg+xml' },
+        { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+      ],
+      apple: [
+        { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      ],
+      shortcut: '/favicon.ico',
     },
   };
 }
@@ -127,7 +135,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           type="application/ld+json"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               '@context': 'https://schema.org',
               '@type': ['EducationalOrganization', 'LocalBusiness', 'EducationalOccupationalProgram'],
               name: 'Suresh Hanje Kannada Tutor & Online Tuition',

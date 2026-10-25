@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from '@/components/shared/section-header';
 import { FadeIn } from '@/components/animations/fade-in';
 import { faqs } from '@/data/faqs';
+import { safeJsonLd } from '@/lib/utils';
 
 const categories = [
   { key: 'all', labelEn: 'All Questions', labelKn: 'ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳು', icon: Layers },
@@ -212,7 +213,7 @@ export default function FAQPage() {
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
             mainEntity: faqs.slice(0, 15).map((faq) => ({

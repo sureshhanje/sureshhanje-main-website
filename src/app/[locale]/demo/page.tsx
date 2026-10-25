@@ -66,6 +66,8 @@ export default function DemoPage() {
                     src="https://docs.google.com/forms/d/e/1FAIpQLSfOjkiEANDqRvsYYco0kOF7W47cFwEX3HeY-es-MrLZtUKyYQ/viewform?embedded=true"
                     width="100%"
                     height="100%"
+                    loading="lazy"
+                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
                     frameBorder="0"
                     marginHeight={0}
                     marginWidth={0}

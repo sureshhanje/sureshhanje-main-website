@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Star, ChevronDown, Sparkles, Heart } from 'lucide-react';
 import { FadeIn } from '@/components/animations/fade-in';
 import { reviews } from '@/data/reviews';
+import { safeJsonLd } from '@/lib/utils';
 
 const REVIEWS_PER_PAGE = 8;
 
@@ -13,6 +14,7 @@ export default function ReviewsPage() {
   const t = useTranslations('reviews');
   const locale = useLocale();
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_PAGE);
+
   const [submittedReviews, setSubmittedReviews] = useState<typeof reviews>([]);
   const [reviewName, setReviewName] = useState('');
   const [reviewText, setReviewText] = useState('');
@@ -31,21 +33,24 @@ export default function ReviewsPage() {
   const handleReviewSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!reviewName.trim() || !reviewText.trim() || reviewRating === 0) {
+    const trimmedName = reviewName.trim();
+    const trimmedText = reviewText.trim();
+
+    if (!trimmedName || !trimmedText || reviewRating === 0) {
       return;
     }
 
     setSubmittedReviews((current) => [
       {
         id: Date.now(),
-        name: reviewName.trim(),
+        name: trimmedName.slice(0, 100),
         verified: '—',
         date: new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date()),
         category: t('pendingCategory'),
         board: '—',
         subject: '—',
-        rating: reviewRating,
-        text: reviewText.trim(),
+        rating: Math.max(1, Math.min(5, reviewRating)),
+        text: trimmedText.slice(0, 1000),
       },
       ...current,
     ]);
@@ -54,6 +59,8 @@ export default function ReviewsPage() {
     setReviewRating(0);
     setReviewSubmitted(true);
   };
+
+
 
   return (
     <>
@@ -87,7 +94,7 @@ export default function ReviewsPage() {
         </div>
       </section>
 
-      {/* Review Submission */}
+      {/* Review Submission
       <section className="section-padding !pt-0 pb-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-[#16112a] border border-primary-100 dark:border-[#2a2440] rounded-3xl p-6 sm:p-8 shadow-sm">
@@ -154,7 +161,7 @@ export default function ReviewsPage() {
             </form>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Reviews Grid */}
       <section className="section-padding !pt-2 pb-16">
@@ -439,7 +446,7 @@ export default function ReviewsPage() {
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'EducationalOrganization',
             name: 'Suresh Hanje Kannada Tutor & Online Tuition',

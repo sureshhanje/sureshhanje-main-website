@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0",
+    "dev": "next dev",
     "dev:mobile": "node scripts/print-network-url.js && next dev --hostname 0.0.0.0 -p 3000",
     "build": "next build",
-    "start": "next start --hostname 0.0.0.0",
+    "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.17.0",
-    "next": "16.2.7",
+    "next": "^16.4.3",
     "next-intl": "^4.13.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -28,7 +28,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.7",
+    "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
