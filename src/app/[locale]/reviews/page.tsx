@@ -13,13 +13,46 @@ export default function ReviewsPage() {
   const t = useTranslations('reviews');
   const locale = useLocale();
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_PAGE);
+  const [submittedReviews, setSubmittedReviews] = useState<typeof reviews>([]);
+  const [reviewName, setReviewName] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
-  const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
-  const visibleReviews = reviews.slice(0, visibleCount);
-  const hasMore = visibleCount < reviews.length;
+  const allReviews = [...submittedReviews, ...reviews];
+  const avgRating = (allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length).toFixed(1);
+  const visibleReviews = allReviews.slice(0, visibleCount);
+  const hasMore = visibleCount < allReviews.length;
 
   const handleShowMore = () => {
-    setVisibleCount((prev) => Math.min(prev + REVIEWS_PER_PAGE, reviews.length));
+    setVisibleCount((prev) => Math.min(prev + REVIEWS_PER_PAGE, allReviews.length));
+  };
+
+  const handleReviewSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!reviewName.trim() || !reviewText.trim() || reviewRating === 0) {
+      return;
+    }
+
+    setSubmittedReviews((current) => [
+      {
+        id: Date.now(),
+        name: reviewName.trim(),
+        verified: '—',
+        date: new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date()),
+        category: t('pendingCategory'),
+        board: '—',
+        subject: '—',
+        rating: reviewRating,
+        text: reviewText.trim(),
+      },
+      ...current,
+    ]);
+    setReviewName('');
+    setReviewText('');
+    setReviewRating(0);
+    setReviewSubmitted(true);
   };
 
   return (
@@ -50,6 +83,75 @@ export default function ReviewsPage() {
                 • {t('overallRating')}
               </span>
             </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* Review Submission */}
+      <section className="section-padding !pt-0 pb-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white dark:bg-[#16112a] border border-primary-100 dark:border-[#2a2440] rounded-3xl p-6 sm:p-8 shadow-sm">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('writeTitle')}</h2>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{t('writeSubtitle')}</p>
+            </div>
+
+            {reviewSubmitted && (
+              <div role="status" className="mb-5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 px-4 py-3 text-sm text-emerald-800 dark:text-emerald-200">
+                {t('success')}
+              </div>
+            )}
+
+            <form onSubmit={handleReviewSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="review-name" className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">{t('nameLabel')}</label>
+                <input
+                  id="review-name"
+                  value={reviewName}
+                  onChange={(event) => setReviewName(event.target.value)}
+                  required
+                  maxLength={80}
+                  placeholder={t('namePlaceholder')}
+                  className="w-full rounded-xl border border-gray-200 dark:border-[#3a3156] bg-gray-50 dark:bg-[#1d1731] px-4 py-3 text-sm text-gray-900 dark:text-white outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                />
+              </div>
+
+              <fieldset>
+                <legend className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">{t('ratingLabel')}</legend>
+                <div className="flex items-center gap-1" aria-label={t('ratingLabel')}>
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <button
+                      key={rating}
+                      type="button"
+                      onClick={() => setReviewRating(rating)}
+                      aria-label={`${rating} ${t('stars')}`}
+                      aria-pressed={reviewRating === rating}
+                      className="rounded-md p-1 transition hover:bg-amber-50 dark:hover:bg-amber-950/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    >
+                      <Star className={`h-7 w-7 ${rating <= reviewRating ? 'text-amber-400 fill-amber-400' : 'text-gray-300 dark:text-gray-600'}`} />
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div>
+                <label htmlFor="review-text" className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">{t('reviewLabel')}</label>
+                <textarea
+                  id="review-text"
+                  value={reviewText}
+                  onChange={(event) => setReviewText(event.target.value)}
+                  required
+                  maxLength={1000}
+                  rows={5}
+                  placeholder={t('reviewPlaceholder')}
+                  className="w-full resize-y rounded-xl border border-gray-200 dark:border-[#3a3156] bg-gray-50 dark:bg-[#1d1731] px-4 py-3 text-sm text-gray-900 dark:text-white outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                />
+              </div>
+
+              <button type="submit" className="w-full rounded-xl bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-[#16112a]">
+                {t('submit')}
+              </button>
+            </form>
           </div>
         </div>
       </section>
@@ -345,11 +447,11 @@ export default function ReviewsPage() {
             aggregateRating: {
               '@type': 'AggregateRating',
               ratingValue: avgRating,
-              reviewCount: reviews.length.toString(),
+              reviewCount: allReviews.length.toString(),
               bestRating: '5',
               worstRating: '1',
             },
-            review: reviews.slice(0, 20).map((r) => ({
+            review: allReviews.slice(0, 20).map((r) => ({
               '@type': 'Review',
               author: {
                 '@type': 'Person',

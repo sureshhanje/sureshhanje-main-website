@@ -141,7 +141,18 @@
     "overallRating": "Overall Rating",
     "totalReviews": "Total Reviews",
     "verifiedStudent": "Verified Student",
-    "playVideo": "Play Video Testimonial"
+    "playVideo": "Play Video Testimonial",
+    "writeTitle": "Share your experience",
+    "writeSubtitle": "Tell future students and parents about your learning experience. Your review will be checked before it is published.",
+    "nameLabel": "Your name",
+    "namePlaceholder": "Enter your name",
+    "ratingLabel": "Your rating",
+    "stars": "stars",
+    "reviewLabel": "Your review",
+    "reviewPlaceholder": "What did you enjoy about your Kannada classes?",
+    "submit": "Submit review",
+    "success": "Thank you for sharing your experience. Your review is pending approval.",
+    "pendingCategory": "New review"
   },
   "demo": {
     "title": "Book Your Free Demo Class with the Best Kannada Tutor",
