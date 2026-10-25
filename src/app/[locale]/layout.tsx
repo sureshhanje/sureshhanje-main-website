@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/footer';
 import { ScrollProgress } from '@/components/layout/scroll-progress';
 import { FloatingWidgets } from '@/components/layout/floating-widgets';
 import { VercelStats } from '@/components/vercel-stats';
+import { GoogleAnalytics } from '@/components/google-analytics';
 import { siteConfig } from '@/lib/constants';
 import { safeJsonLd } from '@/lib/utils';
 import '../globals.css';
@@ -205,6 +206,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Footer />
           <FloatingWidgets />
           <VercelStats />
+          <GoogleAnalytics />
         </Providers>
       </body>
     </html>
