@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Script from 'next/script';
 import { useTranslations, useLocale } from 'next-intl';
 import { Star, ChevronDown, Sparkles, Heart } from 'lucide-react';
 import { FadeIn } from '@/components/animations/fade-in';
@@ -441,10 +440,9 @@ export default function ReviewsPage() {
         </div>
       </section>
 
-      <Script
+      <script
         id="reviews-schema"
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             '@context': 'https://schema.org',

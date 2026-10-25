@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import Script from 'next/script';
 import { useTranslations, useLocale } from 'next-intl';
 import { ChevronDown, Search, X, HelpCircle, GraduationCap, DollarSign, Settings, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -208,10 +207,9 @@ export default function FAQPage() {
         </div>
       </section>
 
-      <Script
+      <script
         id="faq-schema"
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             '@context': 'https://schema.org',
