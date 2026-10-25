@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Inter } from 'next/font/google';
 import { getMessages } from 'next-intl/server';
 import { Providers } from '@/components/providers';
@@ -123,17 +122,20 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className={inter.variable}>
       <head>
-        <Script
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-screen flex flex-col bg-surface-light dark:bg-surface-dark text-gray-900 dark:text-gray-100 antialiased">
+        <script
           id="theme-script"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;if(r==='dark'){d.classList.add('dark');}else{d.classList.remove('dark');}d.style.colorScheme=r;}catch(e){}})();`
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;if(r==='dark'){d.classList.add('dark');}else{d.classList.remove('dark');}d.style.colorScheme=r;}catch(e){}})();`,
           }}
         />
-        <Script
+        <script
           id="educational-organization-schema"
           type="application/ld+json"
-          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: safeJsonLd({
               '@context': 'https://schema.org',
@@ -195,11 +197,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             }),
           }}
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="min-h-screen flex flex-col bg-surface-light dark:bg-surface-dark text-gray-900 dark:text-gray-100 antialiased">
         <Providers locale={locale} messages={messages}>
           <PlayfulBackground />
           <ScrollProgress />

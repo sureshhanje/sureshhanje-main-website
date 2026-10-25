@@ -1,115 +1,222 @@
-# Kannada Tutor Website
+# 🎓 Suresh Hanje — Online Kannada Tutor & Tuition Platform
 
-This is the official website for Suresh Hanje, a Kannada tutor offering online Kannada classes for school students, PUC, degree, spoken Kannada, and competitive exam preparation.
+Official web platform for **Suresh Hanje**, master Kannada educator with 15+ years of experience providing personalized online Kannada tuition for CBSE, ICSE, State Board, 1st & 2nd PUC, non-Kannadigas spoken Kannada, and Karnataka competitive exams (KAS, FDA, SDA).
 
-The site is built with Next.js App Router, Tailwind CSS, and `next-intl` for English and Kannada content.
+Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, and **next-intl** for complete bilingual localization (English & Kannada).
 
-## What’s Included
+---
 
-- Home page with strong service positioning
-- Courses page for school, PUC, degree, and spoken Kannada learners
-- Reviews/testimonials section
-- Demo booking page with Google Form embed and WhatsApp fallback
-- FAQ, contact, about, and resources pages
-- Localized English and Kannada content
-- SEO metadata, sitemap, robots rules, and structured data
+## 🚀 Quick Start
 
-## Local Development
+### Prerequisites
+- **Node.js**: `v20.x` or later (LTS recommended)
+- **npm**: `v10.x` or later (or `pnpm` / `yarn`)
+- **Git**
 
-Install dependencies and start the dev server:
+### Installation
 
-```bash
-npm install
-npm run dev
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/sureshhanje/sureshhanje-main-website.git
+   cd sureshhanje-main-website
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+4. **Mobile / LAN Testing:**
+   To test on mobile devices connected to the same Wi-Fi network:
+   ```bash
+   npm run dev:mobile
+   ```
+   *(This prints your local IP address and serves Next.js on port 3000).*
+
+---
+
+## 🛠️ Available Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts local dev server bound securely to `localhost:3000` |
+| `npm run dev:mobile` | Shows local network IP and starts server bound to `0.0.0.0` for phone testing |
+| `npm run build` | Compiles an optimized production build using Turbopack |
+| `npm run start` | Launches production server on port 3000 |
+| `npm run lint` | Runs ESLint 9 checks across all TypeScript and React files |
+| `npm audit` | Verifies security of all dependency packages |
+
+---
+
+## 🏗️ Project Architecture
+
+```text
+kannada-tutor/
+├── messages/                     # Bilingual translation catalogs
+│   ├── en.json                   # English strings & copy
+│   └── kn.json                   # Kannada strings & copy
+├── public/                       # Static public assets
+│   ├── images/                   # OpenGraph and social share preview images
+│   ├── icon.svg                  # SVG favicon with Kannada glyph
+│   ├── favicon.ico               # Multi-resolution favicon
+│   └── photo.jpeg                # High-res profile photograph
+├── scripts/                      # Utility scripts
+│   └── print-network-url.js      # LAN IP detector for mobile testing
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── [locale]/             # Localized routes (en & kn)
+│   │   │   ├── about/            # Teacher bio, experience, timeline
+│   │   │   ├── courses/          # Course catalog & board filter
+│   │   │   ├── demo/             # Free 30-min demo booking page
+│   │   │   ├── faq/              # Interactive FAQ & accordion
+│   │   │   ├── games/            # Educational Kannada vocab & grammar games
+│   │   │   ├── reviews/          # Verified student testimonials & ratings
+│   │   │   ├── layout.tsx        # Locale root layout with Schema.org & fonts
+│   │   │   └── page.tsx          # Homepage with Hero, stats, & CTAs
+│   │   ├── not-found.tsx         # 404 handler
+│   │   ├── robots.ts             # Search engine crawler instructions
+│   │   └── sitemap.ts            # Dynamic bilingual XML sitemap generator
+│   ├── components/               # Reusable React components
+│   │   ├── animations/           # Framer Motion entrance effects
+│   │   ├── layout/               # Navbar, MobileNav, Footer, FloatingWidgets
+│   │   ├── shared/               # GlassCard, SectionHeader, AnimatedCounter
+│   │   └── theme-provider.tsx    # Light / Dark mode management
+│   ├── data/                     # Structured application data
+│   │   ├── courses.ts            # Course listings by syllabus
+│   │   ├── faqs.ts               # Frequently asked questions list
+│   │   └── reviews.ts            # Verified parent & student reviews
+│   ├── i18n/                     # Internationalization configuration
+│   │   ├── routing.ts            # Supported locales & routing strategy
+│   │   └── request.ts            # Server-side message loader & Asia/Kolkata timezone
+│   ├── lib/                      # Utilities & constants
+│   │   ├── constants.ts          # Contact details, links, metadata config
+│   │   └── utils.ts              # Class merging (cn) & safeJsonLd sanitizer
+│   └── middleware.ts             # Locale routing middleware
+├── next.config.ts                # Next.js config with comprehensive Security Headers
+├── package.json                  # Dependencies & scripts
+└── vercel.json                   # Vercel deployment specifications
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
 
-## Production Build
+## 🔒 Security & Hardening Features
 
-```bash
-npm run build
-npm run start
+This repository implements enterprise-grade web application security:
+
+1. **Zero Known Vulnerabilities**: Regularly audited with `npm audit` (`next@^16.4.3+`, patched against RCE and DoS CVEs).
+2. **HTTP Defensive Headers**: Configured in [`next.config.ts`](next.config.ts):
+   - **`X-Frame-Options: SAMEORIGIN`**: Eliminates Clickjacking vulnerabilities.
+   - **`X-Content-Type-Options: nosniff`**: Prevents MIME-confusion attacks.
+   - **`Referrer-Policy: strict-origin-when-cross-origin`**: Stops query parameter leakage to external links.
+   - **`Permissions-Policy`**: Restricts browser camera, mic, and geolocation sensors.
+   - **`Strict-Transport-Security` (HSTS)**: Forces encrypted HTTPS connections.
+   - **`Content-Security-Policy` (CSP)**: Whitelists approved script, style, frame, and font sources.
+   - **`poweredByHeader: false`**: Hides server technology fingerprint.
+3. **XSS-Resistant Schema.org Serialization**: Custom `safeJsonLd()` utility escapes HTML closing tags (`\u003c/script\u003e`) within structured data.
+4. **Third-Party Iframe Sandboxing**: Google Form embeds in [`src/app/[locale]/demo/page.tsx`](src/app/%5Blocale%5D/demo/page.tsx) use explicit `sandbox` restrictions and lazy loading.
+5. **Input Validation**: Client-side form submissions enforce maximum character constraints and value limits.
+
+---
+
+## 🌐 Localization (English & Kannada)
+
+The website uses `next-intl` with subpath routing:
+- **English (Default)**: `https://sureshhanje.com/` (or `/en/...`)
+- **Kannada**: `https://sureshhanje.com/kn/...`
+
+### How to update translations
+1. Edit copy in [`messages/en.json`](messages/en.json) for English.
+2. Edit matching keys in [`messages/kn.json`](messages/kn.json) for Kannada.
+3. Keep both JSON files synchronized with identical key hierarchies.
+
+---
+
+## 🔍 SEO & Webmaster Guide
+
+### 1. Verification & Search Console
+1. Add the domain `https://sureshhanje.com` to [Google Search Console](https://search.google.com/search-console).
+2. Submit the sitemap index:
+   ```text
+   https://sureshhanje.com/sitemap.xml
+   ```
+3. Test crawling access via `https://sureshhanje.com/robots.txt`.
+
+### 2. Social Sharing & OpenGraph Previews
+- OpenGraph image preview is located at:
+  ```text
+  https://sureshhanje.com/images/og-image.jpg
+  ```
+- Validate metadata cards with:
+  - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+  - [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+  - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
+
+### 3. Structured Data Testing
+Validate rich snippets with [Google Rich Results Test](https://search.google.com/test/rich-results) for:
+- `EducationalOrganization`
+- `FAQPage`
+- `Review` & `AggregateRating`
+
+---
+
+## 🚢 Deployment
+
+### Deploying to Vercel (Recommended)
+
+1. Push your changes to the `main` branch on GitHub:
+   ```bash
+   git push origin main
+   ```
+2. Import the repository into your **Vercel Dashboard**.
+3. Vercel automatically detects Next.js settings from `vercel.json` and runs:
+   ```bash
+   npm run build
+   ```
+4. Assign your custom production domain (`sureshhanje.com`) under **Settings → Domains**.
+
+### Self-Hosting (Node.js / VPS / Docker)
+
+1. Build the production application:
+   ```bash
+   npm run build
+   ```
+2. Start the standalone server:
+   ```bash
+   npm run start
+   ```
+3. Use a reverse proxy like **Nginx** or **Caddy** with SSL/TLS (Let's Encrypt) forwarding traffic to port `3000`.
+
+---
+
+## 📞 Tutor Contact Configuration
+
+All site-wide contact links are centrally managed in [`src/lib/constants.ts`](src/lib/constants.ts):
+
+```typescript
+export const siteConfig = {
+  name: 'Suresh Hanje - Kannada Tutor',
+  url: 'https://sureshhanje.com',
+  links: {
+    whatsapp: 'https://wa.me/919686068162',
+    email: 'mailto:sureshhanje96@gmail.com',
+    phone: 'tel:+919686068162',
+  },
+  stats: {
+    experience: 15,
+    students: 500,
+    classes: 1000,
+    rating: 5.0,
+  },
+};
 ```
 
-## Important Files
+---
 
-- [src/app/[locale]/layout.tsx](src/app/%5Blocale%5D/layout.tsx) controls metadata, language handling, and structured data.
-- [src/app/[locale]/page.tsx](src/app/%5Blocale%5D/page.tsx) is the homepage.
-- [src/app/[locale]/demo/page.tsx](src/app/%5Blocale%5D/demo/page.tsx) contains the demo booking experience.
-- [src/lib/constants.ts](src/lib/constants.ts) contains site links, description, and stats.
-- [messages/en.json](messages/en.json) and [messages/kn.json](messages/kn.json) contain all copy.
-
-## SEO Checklist
-
-Use this checklist after deployment to help Google discover and understand the site.
-
-### Indexing Setup
-
-1. Add the live domain to Google Search Console.
-2. Submit the sitemap at `/sitemap.xml`.
-3. Verify the robots file allows crawling.
-4. Request indexing for the homepage and demo page.
-
-### Keyword Targeting
-
-Focus page copy on these phrases where they naturally fit:
-
-- Best Kannada Tutor
-- Online Kannada Teacher
-- Kannada Tuition
-- Kannada Classes Online
-- Spoken Kannada Classes
-- Kannada Tutor in Karnataka
-
-### Content Signals
-
-- Keep the homepage title and description aligned with the target keywords.
-- Keep the demo page visible and indexable with real text, not only an iframe.
-- Add more helpful content over time, such as lessons, FAQs, and student success stories.
-
-### Trust Signals
-
-- Keep your phone number, email, and WhatsApp link visible.
-- Add testimonials and student results.
-- Use the same business name consistently across the site and social profiles.
-
-### Off-Page SEO
-
-- Link the site from your YouTube channel, Instagram bio, Facebook page, and local business listings.
-- Collect backlinks from directories, education listings, and partner pages.
-- Share the site URL in WhatsApp groups and community pages where appropriate.
-
-### Technical SEO
-
-- Keep the site on the final custom domain, not a preview URL.
-- Make sure every important page has a unique title and description.
-- Keep the sitemap updated when new pages are added.
-- Run the production build after each SEO change.
-
-## Search Ranking Note
-
-This site is optimized for search, but no developer can promise first position on Google. Ranking depends on competition, content quality, backlinks, freshness, and how well Google indexes the site.
-
-## Deployment
-
-The project is already suitable for Vercel deployment.
-
-Recommended post-deploy steps:
-
-1. Set the final custom domain in Vercel.
-2. Resubmit the sitemap in Search Console.
-3. Inspect `/demo` and the homepage with Google’s URL Inspection tool.
-4. Update social links and business profiles to point to the same domain.
-
-## Contact
-
-- Website: Suresh Hanje - Kannada Tutor
-- WhatsApp: configured in [src/lib/constants.ts](src/lib/constants.ts)
-- Email: configured in [src/lib/constants.ts](src/lib/constants.ts)
-
-## Notes for Future Changes
-
-- Keep the English and Kannada translations in sync.
-- When adding pages, update the sitemap route list.
-- If you change the booking flow, keep the demo page fast and mobile-friendly.
+## 📄 License
+Private repository © Suresh Hanje. All rights reserved.
